@@ -11,6 +11,7 @@
 | Version | Date | Author | Change |
 |---|---|---|---|
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 — flow-design Phase 2/4에서 12-scaffolding/typescript.md §7과 동시 작성. Conduit Lite (TS + React/Express/Prisma/SQLite, pnpm workspaces monorepo). |
+| v0.2 | 2026-05-25 | woosung.ahn@bespinglobal.com | Issue #3 — `seed:dev` script 정식 도입(`pnpm --filter @app/backend seed:dev`) + §3.1 dev profile에 DB 초기화 reminder 1줄 추가 (ADR-0040 동기). |
 
 ---
 
@@ -83,8 +84,8 @@ pnpm --filter @app/backend prisma migrate dev --name init
 # ⚠️ 함정: `migrate deploy` CLI는 *기존 migration 파일만* 적용. 위 init 미수행 시 빈 DB로 남음.
 
 # 5) seed 데이터 (dev profile)
-pnpm --filter @app/backend exec tsx prisma/seed.ts
-# (예시 글 5건·댓글 10건·태그 8종 자동 삽입)
+pnpm --filter @app/backend seed:dev
+# (예시 글 5건·댓글 10건·태그 8종 자동 삽입, idempotent)
 ```
 
 ---
@@ -96,6 +97,10 @@ pnpm --filter @app/backend exec tsx prisma/seed.ts
 ### 3.1 dev profile (로컬 개발)
 
 ```bash
+# (최초 1회만, §2 셋업 미완료 시) DB 초기화 + seed
+pnpm --filter @app/backend prisma:push        # backend/prisma/dev.db schema 적용
+pnpm --filter @app/backend seed:dev           # 글 5·댓글 10·태그 8 삽입 (idempotent)
+
 # 옵션 A — frontend + backend 각각 (2 터미널, hot reload O)
 NODE_ENV=development pnpm --filter @app/backend  dev    # tsx watch → :3000
 NODE_ENV=development pnpm --filter @app/frontend dev    # vite      → :5173

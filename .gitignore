@@ -109,6 +109,11 @@ pnpm-debug.log*
 *.sqlite
 *.sqlite3
 
+# Prisma 로컬 DB (Issue #3 — feat-prisma-schema, 명시적 sub-dir 보강)
+# Note: 위 `*.db` 패턴이 sub-dir까지 매칭하나, 보안(R-N-07)·실수 방지 차원에서 명시.
+backend/prisma/*.db
+backend/prisma/*.db-journal
+
 # 캐시
 .eslintcache
 .prettiercache
