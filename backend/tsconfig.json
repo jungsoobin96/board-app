@@ -9,5 +9,6 @@
     "types": ["node"]
   },
   "references": [{ "path": "../shared" }],
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "tests"]
 }
