@@ -821,7 +821,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-1
-      - title: "[feat] Prisma schema + migrations + seed"
+      - title: "feat(backend): Prisma schema + migrations + seed"
         slug: "feat-prisma-schema-and-seed"
         labels: ["status:todo", "type:feature", "area:backend", "priority:P0"]
         body: |
@@ -868,7 +868,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-1
-      - title: "[feat] 글 API 5종 + 입력 검증 + 통합 테스트"
+      - title: "feat(backend): 글 API 5종 + 입력 검증 + 통합 테스트"
         slug: "feat-articles-api"
         labels: ["status:todo", "type:feature", "area:backend", "priority:P0"]
         body: |
@@ -918,7 +918,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-1
-      - title: "[chore] 3 profile 부팅 smoke + LOCAL.md §3 검증"
+      - title: "chore(infra): 3 profile 부팅 smoke + LOCAL.md §3 검증"
         slug: "chore-3profile-smoke"
         labels: ["status:todo", "type:chore", "area:infra", "priority:P0"]
         body: |
@@ -971,7 +971,7 @@ sprints:
     due: "2026-05-30"
     description: "댓글 CRD + 태그 빈도 + cascade·에러 schema 통합 회귀."
     issues:
-      - title: "[feat] 댓글 API (CRD, 수정 없음) + 통합"
+      - title: "feat(backend): 댓글 API (CRD, 수정 없음) + 통합"
         slug: "feat-comments-api"
         labels: ["status:todo", "type:feature", "area:backend", "priority:P0"]
         body: |
@@ -1019,7 +1019,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-2
-      - title: "[feat] 태그 API + 정렬·상한 + 통합"
+      - title: "feat(backend): 태그 API + 정렬·상한 + 통합"
         slug: "feat-tags-api"
         labels: ["status:todo", "type:feature", "area:backend", "priority:P0"]
         body: |
@@ -1065,7 +1065,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-2
-      - title: "[test] cascade 무결성 통합 회귀"
+      - title: "test(backend): cascade 무결성 통합 회귀"
         slug: "test-cascade-integration"
         labels: ["status:todo", "type:test", "area:backend", "priority:P0"]
         body: |
@@ -1111,7 +1111,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-2
-      - title: "[test] 에러 schema 통일 통합 회귀"
+      - title: "test(backend): 에러 schema 통일 통합 회귀"
         slug: "test-error-schema-integration"
         labels: ["status:todo", "type:test", "area:backend", "priority:P0"]
         body: |
@@ -1162,7 +1162,7 @@ sprints:
     due: "2026-06-03"
     description: "Vite + Tailwind + Router·api-client·Home·Article 페이지."
     issues:
-      - title: "[feat] frontend 골격 + Vite + Tailwind + Router + 토큰"
+      - title: "feat(frontend): frontend 골격 + Vite + Tailwind + Router + 토큰"
         slug: "feat-frontend-skeleton-and-tokens"
         labels: ["status:todo", "type:feature", "area:frontend", "priority:P0"]
         body: |
@@ -1209,7 +1209,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-3
-      - title: "[feat] api-client + shared types + 에러 정규화"
+      - title: "feat(frontend): api-client + shared types + 에러 정규화"
         slug: "feat-frontend-api-client"
         labels: ["status:todo", "type:feature", "area:frontend", "priority:P0"]
         body: |
@@ -1257,7 +1257,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-3
-      - title: "[feat] Home 페이지 (글 목록 + 사이드바 + 페이지네이션)"
+      - title: "feat(frontend): Home 페이지 (글 목록 + 사이드바 + 페이지네이션)"
         slug: "feat-home-page"
         labels: ["status:todo", "type:feature", "area:frontend", "priority:P0"]
         body: |
@@ -1307,7 +1307,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-3
-      - title: "[feat] Article 상세 페이지 + 댓글 목록"
+      - title: "feat(frontend): Article 상세 페이지 + 댓글 목록"
         slug: "feat-article-page-and-comments-list"
         labels: ["status:todo", "type:feature", "area:frontend", "priority:P0"]
         body: |
@@ -1360,7 +1360,7 @@ sprints:
     due: "2026-06-08"
     description: "Editor·삭제 UX·댓글 작성·삭제·NotFound."
     issues:
-      - title: "[feat] Editor 페이지 (글 작성·수정)"
+      - title: "feat(frontend): Editor 페이지 (글 작성·수정)"
         slug: "feat-editor-page"
         labels: ["status:todo", "type:feature", "area:frontend", "priority:P0"]
         body: |
@@ -1409,7 +1409,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-4
-      - title: "[feat] 글 삭제 UX + cascade 시각 확인"
+      - title: "feat(frontend): 글 삭제 UX + cascade 시각 확인"
         slug: "feat-article-delete-ux"
         labels: ["status:todo", "type:feature", "area:frontend", "priority:P0"]
         body: |
@@ -1455,7 +1455,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-4
-      - title: "[feat] 댓글 작성·삭제 UI"
+      - title: "feat(frontend): 댓글 작성·삭제 UI"
         slug: "feat-comment-create-delete-ui"
         labels: ["status:todo", "type:feature", "area:frontend", "priority:P0"]
         body: |
@@ -1503,7 +1503,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-4
-      - title: "[feat] NotFound + ErrorBoundary"
+      - title: "feat(frontend): NotFound + ErrorBoundary"
         slug: "feat-notfound-and-error-boundary"
         labels: ["status:todo", "type:feature", "area:frontend", "priority:P1"]
         body: |
@@ -1555,7 +1555,7 @@ sprints:
     due: "2026-06-10"
     description: "UX 마무리·응답 시간·E2E 골든 패스."
     issues:
-      - title: "[feat] 태그 필터 UX 마무리 + URL state"
+      - title: "feat(frontend): 태그 필터 UX 마무리 + URL state"
         slug: "feat-tag-filter-ux-polish"
         labels: ["status:todo", "type:feature", "area:frontend", "priority:P1"]
         body: |
@@ -1602,7 +1602,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-5
-      - title: "[test] 반응형 회귀 + 토큰 회귀"
+      - title: "test(frontend): 반응형 회귀 + 토큰 회귀"
         slug: "test-responsive-and-token-regression"
         labels: ["status:todo", "type:test", "area:frontend", "priority:P1"]
         body: |
@@ -1648,7 +1648,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-5
-      - title: "[test] 응답 시간 측정 통합 (p95 < 200ms)"
+      - title: "test(backend): 응답 시간 측정 통합 (p95 < 200ms)"
         slug: "test-response-time-p95"
         labels: ["status:todo", "type:test", "area:backend", "priority:P1"]
         body: |
@@ -1694,7 +1694,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-5
-      - title: "[test] E2E 골든 패스 (Playwright 5건 + gstack)"
+      - title: "test(frontend): E2E 골든 패스 (Playwright 5건 + gstack)"
         slug: "test-e2e-golden-path"
         labels: ["status:todo", "type:test", "area:frontend", "priority:P1"]
         body: |
@@ -1746,7 +1746,7 @@ sprints:
     due: "2026-06-12"
     description: "README + 한국어 주석 ≥80% + 평가 기준 7개 통과."
     issues:
-      - title: "[docs] README 작성 (설치·실행·평가 기준·보안)"
+      - title: "docs(docs): README 작성 (설치·실행·평가 기준·보안)"
         slug: "docs-readme-write"
         labels: ["status:todo", "type:docs", "area:docs", "priority:P0"]
         body: |
@@ -1795,7 +1795,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-6
-      - title: "[docs] 한국어 주석 보강 + 측정 스크립트"
+      - title: "docs(docs): 한국어 주석 보강 + 측정 스크립트"
         slug: "docs-korean-comments-coverage"
         labels: ["status:todo", "type:docs", "area:docs", "priority:P1"]
         body: |
@@ -1841,7 +1841,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-6
-      - title: "[test] 최종 골든 패스 + 평가 기준 7개"
+      - title: "test(docs): 최종 골든 패스 + 평가 기준 7개"
         slug: "test-final-golden-path-and-eval-criteria"
         labels: ["status:todo", "type:test", "area:docs", "priority:P0"]
         body: |
@@ -1889,7 +1889,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-6
-      - title: "[bug] 잔여 버그 수정 + Open Questions 해소"
+      - title: "fix(backend): 잔여 버그 수정 + Open Questions 해소"
         slug: "bug-residual-and-open-questions-resolve"
         labels: ["status:todo", "type:bug", "area:backend", "priority:P1"]
         body: |
