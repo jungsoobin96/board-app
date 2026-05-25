@@ -1,0 +1,15 @@
+{
+  "name": "@app/frontend",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Vite + React + Tailwind frontend (모듈 placeholder, 이슈 #10에서 실 도입)",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "dev": "echo 'dev script placeholder — 이슈 #10에서 vite 도입 예정'"
+  },
+  "dependencies": {
+    "@app/shared": "workspace:*"
+  }
+}

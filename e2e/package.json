@@ -1,0 +1,12 @@
+{
+  "name": "@app/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Playwright E2E (모듈 placeholder, 이슈 #21에서 실 도입)",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "test:e2e": "echo 'e2e script placeholder — 이슈 #21에서 playwright 도입 예정'"
+  }
+}
