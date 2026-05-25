@@ -726,7 +726,7 @@ sprints:
     due: "2026-05-28"
     description: "monorepo·Prisma·글 CRUD API·3 profile 부팅. M1 종료 시 backend 글 API 동작."
     issues:
-      - title: "[chore] monorepo 스캐폴딩 및 빌드·lint 골격"
+      - title: "chore(infra): monorepo 스캐폴딩 및 빌드·lint 골격"
         slug: "feat-monorepo-scaffold"
         labels: ["status:todo", "type:chore", "area:infra", "priority:P0"]
         body: |
@@ -773,7 +773,7 @@ sprints:
 
           ---
           상세: {{WBS_URL}}#sprint-1
-      - title: "[feat] backend 골격 + 에러 핸들러 + env validateEnv"
+      - title: "feat(backend): backend 골격 + 에러 핸들러 + env validateEnv"
         slug: "feat-backend-skeleton"
         labels: ["status:todo", "type:feature", "area:backend", "priority:P0"]
         body: |
