@@ -1,0 +1,16 @@
+{
+  "name": "@app/backend",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Express + Prisma backend (모듈 placeholder, 이슈 #2에서 실 도입)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "dev": "echo 'dev script placeholder — 이슈 #2에서 tsx watch 도입 예정'"
+  },
+  "dependencies": {
+    "@app/shared": "workspace:*"
+  }
+}
