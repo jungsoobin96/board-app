@@ -20,6 +20,7 @@ related:
 | Version | Date | Author | Change |
 |---|---|---|---|
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-design Phase 2/4, ADR-0037 v1.1 + ADR-0038 + ADR-0040 정합) |
+| v0.2 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #5 — §5 smoke 명령을 `pnpm smoke:3profiles` 단일 명령으로 정합 갱신 + §7 부팅 자산 표에 smoke 자동화 행 추가 (LOCAL.md §4 양축 동기). |
 
 ## 1. 디렉토리 트리
 
@@ -239,10 +240,12 @@ pnpm typecheck                                              # tsc --noEmit on al
 
 # ─── AI 게이트 (PR 직전) ─────────────────────────────────
 
-# 1. 3 profile 부팅 smoke (R-N-04)
-NODE_ENV=development pnpm --filter @app/backend smoke      # 부팅 5초 후 GET /api/articles → 200
-NODE_ENV=staging     pnpm --filter @app/backend smoke
-NODE_ENV=production  pnpm --filter @app/backend smoke
+# 1. 3 profile 부팅 smoke (R-N-04) — Issue #5에서 실 동작 도입
+pnpm smoke:3profiles                                       # 3 profile 순차 (chain &&, fail-fast)
+# 또는 개별 호출:
+pnpm smoke:dev                                             # GET /api/articles → 200, ≤ 5초 ready
+pnpm smoke:stg
+pnpm smoke:prod
 # 2. gstack /qa 골든 패스 (UI 변경 시, R-N-06)
 # 3. validate-doc.sh 산출 검증 (yq 설치 후)
 ```
@@ -274,6 +277,7 @@ NODE_ENV=production  pnpm --filter @app/backend smoke
 | 설치/seed scripts | `package.json` scripts: `prepare`, `prisma:push`, `seed:dev`, `seed:stg`, `seed:prod` | seed 데이터 변경 | seed 변경 이슈 |
 | 부팅 명령 | 본 §5 코드블록 + LOCAL.md §3 | 명령 변경 | 명령 변경 이슈 |
 | LOCAL.md | 루트 `LOCAL.md` (ADR-0040 — 본 §7과 매 PR 동기) | 부팅 자산 변경 시 동시 | LOCAL.md를 변경한 같은 이슈 |
+| smoke 자동화 | `scripts/smoke.ts` + root `scripts.smoke:dev/stg/prod/3profiles` + backend `scripts.smoke` (ADR-0037 v1.1 6번째 축 정식 충족) | smoke 흐름 변경 | smoke 변경 이슈 (#5에서 도입) |
 | 컨테이너 정의 (선택, Phase 2+) | `Dockerfile`·`docker-compose.{dev,stg,prod}.yml` | infra 변경 | infra 이슈 |
 
 > **Prisma 분류 (ADR-0037 v1.3)**: 본 프로젝트는 **(a) 분리형** 채택. dev iteration은 `prisma db push` (빠른 동기), stg/prod release는 `prisma migrate deploy` (정식 migration 파일 디렉토리 적용). Spring Boot + Flyway integration 류 단일 메커니즘 아님.
