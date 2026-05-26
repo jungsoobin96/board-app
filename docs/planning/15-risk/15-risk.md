@@ -21,6 +21,7 @@ related:
 |---|---|---|---|
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-wbs Phase 3/4) |
 | v0.2 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #5 PR #33 — 3 profile 부팅 smoke 자동화 fan-in. RISK-13/14/15 신설 (smoke timeout false-negative · child zombie · smoke 출력 시크릿 노출). R-N-04 dev only PASS + stg/prod N/A 위임 상태가 #5 PR #33으로 3 profile 실 PASS 정식 충족 baseline 진입(머지 후 효력). |
+| v0.3 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #6 PR — 댓글 API 도입 fan-in. RISK-16 신설 (nested router mergeParams 누락 회귀 패턴 — articles 단일 라우터에선 미발현, comments 도입으로 첫 적용). |
 
 ## 1. 리스크 일람
 
@@ -43,6 +44,7 @@ related:
 | RISK-13 | smoke 5초 timeout false-negative (CI runner·WSL2 등 느린 환경) | 3 | 2 | Medium | Sprint 1 / Issue #5 (PR #33) + Sprint 2+ 전 PR (6번째 축) | smoke.ts warmup 500ms + SMOKE_TIMEOUT_MS env override + child stderr 첨부. Found-Q-1로 CI smoke job 별 follow-up 권고 |
 | RISK-14 | smoke child process zombie 잔존 → 후속 EADDRINUSE | 4 | 2 | Medium | Sprint 1 / Issue #5 (PR #33) + Sprint 2+ smoke 호출 전 PR | scripts/smoke.ts SIGTERM → 1초 → SIGKILL fallback + process.on('SIGINT') cleanup. AC-04 검증 |
 | RISK-15 | smoke 출력에 시크릿 노출 (DATABASE_URL 등) — CLAUDE.md §보안 §2 위배 위험 | 5 | 1 | Medium | 전 Sprint smoke 호출 시 | scripts/smoke.ts 출력 화이트리스트 (profile/PORT/ready ms/HTTP status only). reviewer agent grep 검증 + child stderr 5줄 첨부도 raw bash (시크릿 미포함) |
+| RISK-16 | nested router 마운트 시 `Router({ mergeParams: true })` 옵션 누락 → 부모 path param(`:articleId`) 추출 실패 → 모든 endpoint 400/500 | 4 | 2 | Medium | Sprint 2 / Issue #6 (PR feat/comments-api-issue-6) + Sprint 4+ 추가 nested 도메인 | routes/<domain>.ts 신설 시 mergeParams 옵션 명시 (comments 답습) + integration test 자동 검출 (happy path 200 응답 = 옵션 정상 작동 증거) + code-review 점검 항목 추가 |
 
 ## 2. 리스크 상세
 
@@ -254,6 +256,20 @@ related:
   - P9 code-review reviewer agent가 매 smoke 변경 PR에서 `console.log(process.env\|DATABASE_URL\|JWT_SECRET)` grep 0건 강제
   - settings.json PreToolUse 훅이 `.env*` 직접 Write/Edit 차단
 - **대응 이슈**: Issue #5 (본 PR — 화이트리스트 도입), Sprint 2+ smoke 본문 변경 PR마다 reviewer grep 의무
+
+### RISK-16: nested router 마운트 시 mergeParams 옵션 누락 → path param 추출 실패
+
+- **카테고리**: 회귀
+- **설명**: Express에서 부모 라우터의 path param(`:articleId`)을 자식 라우터에서 추출하려면 `Router({ mergeParams: true })` 옵션이 필수. 옵션 누락 시 `req.params.articleId === undefined` → `parsePathId(undefined)` → ValidationError throw → 모든 endpoint 400 (또는 service에 NaN articleId 전파 시 500). articles 단일 라우터에선 미발현, comments 도입(#6)으로 첫 nested 패턴 적용.
+- **영향**: 4 — 모든 endpoint 차단 (CI fail)
+- **가능성**: 2 — articles 패턴 답습 + integration test 자동 검출
+- **현재 상태**: 완화 (Issue #6 PR에서 mergeParams=true 명시 + integration AC-01 happy path가 자연 검출)
+- **트리거 신호**: 신규 nested router 추가 시 integration test happy path 모두 400/500 → mergeParams 누락 추정.
+- **완화 전략**:
+  - routes/<domain>.ts 신설 시 `Router({ mergeParams: true })` 명시 (comments 답습 — code-review checklist에 추가)
+  - integration test happy path 1건 이상 보장 (200 응답 = articleId 정상 추출 증거)
+  - P9 code-review에서 nested router 신설 PR마다 mergeParams 옵션 grep 점검
+- **대응 이슈**: Issue #6 (본 PR — comments 도입 + 완화 패턴 정립), Sprint 4+ 추가 nested 도메인 (댓글 reply 등 가능성) PR마다 동일 점검
 
 ## 3. High 리스크 단계적 롤아웃
 

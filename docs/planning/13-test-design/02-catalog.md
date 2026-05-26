@@ -20,6 +20,7 @@ related:
 | Version | Date | Author | Change |
 |---|---|---|---|
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-design Phase 2/4) |
+| v0.2 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #6 PR — F-05 (댓글 작성·삭제) §1 단위 + §2 통합 fan-in. ADR-0035 WARN 1건 해소 (잔여 F-08·F-12는 #7·Sprint 6 별 진행). |
 
 ## 1. 단위 테스트 카탈로그
 
@@ -107,6 +108,18 @@ related:
 - Happy: `<ArticleCard>` snapshot 1종 (PR diff 시 변화 감지)
 - Failure: snapshot mismatch → CI fail
 
+### F-05: 댓글 작성·삭제 — 단위
+
+출처: 05#F-05, 04#R-F-06, 04#R-F-05
+테스트 레벨: 단위
+대상 모듈: M9 `validateCommentInput`, M7 `comment.service.create/list/remove`
+- Happy: body·author trim → ParsedCommentInput 반환 (정상 케이스)
+- Failure: body 빈/공백만 → `VAL_COMMENT_BODY_REQUIRED` ValidationError
+- Failure: author 빈/51자 → `VAL_COMMENT_AUTHOR_REQUIRED`/`VAL_COMMENT_AUTHOR_TOO_LONG`
+- Failure (service): article 미존재 → NotFoundError "글을 찾을 수 없습니다"
+- Failure (service): DELETE articleId mismatch → NotFoundError "댓글을 찾을 수 없습니다"
+- 발현: Sprint 2 / Issue #6 (PR feat/comments-api-issue-6)
+
 ### F-10: 한국어 주석 ≥80% — 단위
 
 출처: 05#F-10 (R-N-05)
@@ -181,6 +194,20 @@ related:
 - Happy: 글+댓글 3건 → DELETE → Article·Comment 모두 articleId 행 0건
 - Happy: ArticleTag 매핑도 cascade 삭제 확인 (Tag 자체는 남음)
 - Failure: 트랜잭션 rollback 시나리오 (force throw 주입) — 모두 보존
+
+### F-05: 댓글 작성·삭제 — 통합
+
+출처: 05#F-05, 04#R-F-06, 04#R-F-05
+테스트 레벨: 통합
+대상: GET·POST·DELETE `/api/articles/:id/comments[/:commentId]` (M5→M6→M7→M8→M11)
+- Happy POST: `{body,author}` → 201 + comment 반환 + DB count +1
+- Happy DELETE: 204 + DB count -1
+- Happy GET: createdAt DESC 정렬 + comments 배열
+- Failure POST/GET/DELETE: 미존재 articleId → 404 + "글을 찾을 수 없습니다"
+- Failure POST: 빈 body → 400 + "본문은 필수입니다"
+- Failure DELETE: articleId mismatch (다른 article의 commentId) → 404 + "댓글을 찾을 수 없습니다" + DB 미삭제 확인
+- 회귀: cascade fan-in — 글+댓글 3건 → DELETE article → GET comments 404 + Comment row 0건 (schema-level CASCADE 검증, comments 시점)
+- 발현: Sprint 2 / Issue #6 (PR feat/comments-api-issue-6)
 
 ### R-N-01: 응답 시간 측정
 
