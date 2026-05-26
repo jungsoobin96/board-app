@@ -23,7 +23,6 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { createServer } from "node:net";
 import { resolve } from "node:path";
-import { config as loadDotenv } from "dotenv";
 
 type Profile = "dev" | "stg" | "prod";
 
@@ -126,9 +125,6 @@ async function main(): Promise<void> {
     console.error("[smoke] usage: tsx scripts/smoke.ts <dev|stg|prod>");
     process.exit(2);
   }
-
-  const repoRoot = resolve(import.meta.dirname, "..");
-  loadDotenv({ path: resolve(repoRoot, `.env.${profile}`) });
 
   const port = Number(process.env.PORT ?? PROFILE_PORTS[profile]);
   console.log(`[smoke] profile=${profile} port=${port} — spawning backend...`);

@@ -15,7 +15,11 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -b",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "smoke:dev": "pnpm --filter @app/backend exec dotenv -e ../.env.dev -- tsx ../scripts/smoke.ts dev",
+    "smoke:stg": "pnpm --filter @app/backend exec dotenv -e ../.env.stg -- tsx ../scripts/smoke.ts stg",
+    "smoke:prod": "pnpm --filter @app/backend exec dotenv -e ../.env.prod -- tsx ../scripts/smoke.ts prod",
+    "smoke:3profiles": "pnpm run smoke:dev && pnpm run smoke:stg && pnpm run smoke:prod"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
