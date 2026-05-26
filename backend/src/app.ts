@@ -8,6 +8,7 @@ import type { Env } from './env.js';
 import { corsMiddleware } from './middleware/cors.js';
 import { requestLogger } from './middleware/request-logger.js';
 import { errorHandler, notFoundHandler } from './middleware/error-handler.js';
+import { articlesRouter } from './routes/articles.js';
 
 export function buildApp(env: Env): express.Application {
   const app = express();
@@ -21,7 +22,8 @@ export function buildApp(env: Env): express.Application {
     res.json({ ok: true });
   });
 
-  // routes는 후속 이슈 #4에서 추가 (app.use('/api/articles', articlesRouter) 등)
+  // 도메인 라우터 — notFoundHandler 직전 등록 (F-RISK-03 회귀 안전망)
+  app.use('/api/articles', articlesRouter);
 
   // 미등록 경로 + 에러 핸들링은 가장 마지막
   app.use(notFoundHandler);
