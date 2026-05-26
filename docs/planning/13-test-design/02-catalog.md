@@ -21,6 +21,7 @@ related:
 |---|---|---|---|
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-design Phase 2/4) |
 | v0.2 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #6 PR — F-05 (댓글 작성·삭제) §1 단위 + §2 통합 fan-in. ADR-0035 WARN 1건 해소 (잔여 F-08·F-12는 #7·Sprint 6 별 진행). |
+| v0.3 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #7 PR — F-02 (태그 필터) + F-08 (인기 태그 사이드바) §1·§2 fan-in. ADR-0035 WARN 2건 추가 해소 (잔여 F-12만 Sprint 6 별 진행). |
 
 ## 1. 단위 테스트 카탈로그
 
@@ -120,6 +121,24 @@ related:
 - Failure (service): DELETE articleId mismatch → NotFoundError "댓글을 찾을 수 없습니다"
 - 발현: Sprint 2 / Issue #6 (PR feat/comments-api-issue-6)
 
+### F-02: 태그 필터 — 단위
+
+출처: 05#F-02, 04#R-F-04
+테스트 레벨: 단위
+대상 모듈: M7 `tag.service.list` (정렬·상한·response shape 매핑)
+- Happy: repo mock 결과 → `{ tags: [{name, count}] }` shape 매핑
+- Happy: default limit 20 전달
+- Happy: 빈 결과 → `{ tags: [] }`
+- 발현: Sprint 2 / Issue #7 (PR feat/tags-api-issue-7)
+
+### F-08: 인기 태그 사이드바 — 단위
+
+출처: 05#F-08, 04#R-F-04
+테스트 레벨: 단위
+대상 모듈: M7 `tag.service.list` (위 F-02와 동일 service — 사이드바 데이터 소스)
+- (F-02 단위 케이스로 fan-in 흡수)
+- 발현: Sprint 2 / Issue #7
+
 ### F-10: 한국어 주석 ≥80% — 단위
 
 출처: 05#F-10 (R-N-05)
@@ -208,6 +227,24 @@ related:
 - Failure DELETE: articleId mismatch (다른 article의 commentId) → 404 + "댓글을 찾을 수 없습니다" + DB 미삭제 확인
 - 회귀: cascade fan-in — 글+댓글 3건 → DELETE article → GET comments 404 + Comment row 0건 (schema-level CASCADE 검증, comments 시점)
 - 발현: Sprint 2 / Issue #6 (PR feat/comments-api-issue-6)
+
+### F-02: 태그 필터 — 통합
+
+출처: 05#F-02, 04#R-F-04
+테스트 레벨: 통합
+대상: GET `/api/tags` (M5→M6→M7→M8→M11) + 글 작성 시 tag upsert (article repo)
+- Happy: 30종 시드 + 글 매핑 다양 → 200 + `{tags:[{name,count}]}` count desc 상위 20
+- Happy: 빈 DB → 200 + `{tags:[]}`
+- Happy: 동률 5종 (동일 count=3) → 모두 포함 (secondary sort 비목표)
+- 발현: Sprint 2 / Issue #7
+
+### F-08: 인기 태그 사이드바 — 통합
+
+출처: 05#F-08, 04#R-F-04
+테스트 레벨: 통합
+대상: GET `/api/tags` (F-02 단위와 동일 endpoint — 사이드바 BE 데이터 소스)
+- (F-02 통합 케이스로 fan-in 흡수)
+- 발현: Sprint 2 / Issue #7
 
 ### R-N-01: 응답 시간 측정
 
