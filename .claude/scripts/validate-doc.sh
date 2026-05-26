@@ -592,10 +592,12 @@ fi
 # === 6a. feature-ai-qa 조건부 BLOCK — ui_changed=true 시 (ADR-0011) ===
 # UI/FE 변경 PR은 브라우저 골든패스 실증 BLOCK
 if [ "${DOC_TYPE}" = "feature-ai-qa" ]; then
-  UI_CHANGED=$(echo "${FRONTMATTER}" | yq '.ui_changed // ""' 2>/dev/null | tr -d '"')
+  # yq '// ""' alternative 연산자는 false를 falsy로 처리해 false 값이 빈 문자열로 변환됨.
+  # ui_changed=false 는 valid 값이므로 alternative 연산 제거 + null/missing 직접 체크.
+  UI_CHANGED=$(echo "${FRONTMATTER}" | yq '.ui_changed' 2>/dev/null | tr -d '"')
 
-  # ui_changed 필드 자체 누락은 항상 BLOCK
-  if [ -z "${UI_CHANGED}" ] || [ "${UI_CHANGED}" = "null" ] || [ "${UI_CHANGED}" = '""' ]; then
+  # ui_changed 필드 자체 누락은 항상 BLOCK (null = 키 부재)
+  if [ -z "${UI_CHANGED}" ] || [ "${UI_CHANGED}" = "null" ]; then
     report_block "frontmatter 누락 — ui_changed (ADR-0011)"
   fi
 

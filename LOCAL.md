@@ -12,6 +12,7 @@
 |---|---|---|---|
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 — flow-design Phase 2/4에서 12-scaffolding/typescript.md §7과 동시 작성. Conduit Lite (TS + React/Express/Prisma/SQLite, pnpm workspaces monorepo). |
 | v0.2 | 2026-05-25 | woosung.ahn@bespinglobal.com | Issue #3 — `seed:dev` script 정식 도입(`pnpm --filter @app/backend seed:dev`) + §3.1 dev profile에 DB 초기화 reminder 1줄 추가 (ADR-0040 동기). |
+| v0.3 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #5 — 3 profile 부팅 smoke 자동화 (`pnpm smoke:3profiles`) + §2 5)에 stg/prod prisma push 안내 + §3.1/3.2/3.3 각 끝에 smoke 검증 1줄 + §4 부팅 자산 표에 smoke 행 추가 (ADR-0037 v1.1 6번째 축 정식 충족). |
 
 ---
 
@@ -86,6 +87,11 @@ pnpm --filter @app/backend prisma migrate dev --name init
 # 5) seed 데이터 (dev profile)
 pnpm --filter @app/backend seed:dev
 # (예시 글 5건·댓글 10건·태그 8종 자동 삽입, idempotent)
+
+# 6) (선택) stg/prod profile도 smoke 검증할 경우 DB schema 적용 — F-RISK-04 완화
+dotenv -e .env.stg  -- pnpm --filter @app/backend exec prisma db push --schema ./prisma/schema.prisma
+dotenv -e .env.prod -- pnpm --filter @app/backend exec prisma db push --schema ./prisma/schema.prisma
+# (smoke는 GET read-only이므로 seed 불필요 — 빈 stg.db / prod.db로도 200 응답 PASS)
 ```
 
 ---
@@ -113,6 +119,7 @@ pnpm -r --parallel run dev
 - 환경 변수 출처: 루트 `.env.dev` (backend는 dotenv-cli 래핑, frontend는 Vite 자동 로드)
 - DB: `backend/prisma/dev.db` (Prisma 자동 생성)
 - Hot reload: O (backend tsx watch + Vite HMR)
+- **smoke 검증**: `pnpm smoke:dev` 또는 `pnpm smoke:3profiles` (3 profile 일괄)
 
 ### 3.2 stg profile (스테이징 — 로컬에서 stg 흉내)
 
@@ -130,6 +137,7 @@ NODE_ENV=staging  pnpm --filter @app/frontend preview:stg      # vite preview --
 - Hot reload: X (빌드 산출물)
 - ⚠️ 흔한 함정 (§1.5.3): `serve` 같은 별 정적 서버 미설치 — Vite preview 사용
 - **단일 환경 운영 시**: 본 절을 "N/A — stg=prod 공유" 표기 가능
+- **smoke 검증**: `pnpm smoke:stg` (backend만 — frontend는 Sprint 3 #10에서 도입 후 별 PR)
 
 ### 3.3 prod profile (로컬에서 prod 흉내)
 
@@ -145,6 +153,7 @@ NODE_ENV=production pnpm --filter @app/frontend preview:prod   # vite preview --
 - DB: `backend/prisma/prod.db` (별 인스턴스 권장, MVP는 로컬 파일)
 - Hot reload: X
 - **단일 환경 운영 시**: N/A 표기 허용
+- **smoke 검증**: `pnpm smoke:prod` (backend만 — frontend는 Sprint 3 #10에서 도입 후 별 PR)
 
 ---
 
@@ -160,6 +169,7 @@ NODE_ENV=production pnpm --filter @app/frontend preview:prod   # vite preview --
 | lockfile | `pnpm-lock.yaml` (root 단일 — workspaces가 공유) | 의존성 추가/변경 | 의존성 도입 이슈 |
 | 설치/seed scripts | `package.json` scripts: `prepare`, `prisma:push`, `seed:dev` 외 | seed 데이터 변경 | seed 변경 이슈 |
 | 부팅 명령 | 본 LOCAL.md §3 + `package.json` scripts (`dev`, `start:stg`, `start:prod` 등) | 명령 변경 | 명령 변경 이슈 |
+| smoke 자동화 | `scripts/smoke.ts` + root `scripts.smoke:dev/stg/prod/3profiles` + backend `scripts.smoke` | smoke 흐름 변경 | smoke 변경 이슈 |
 | 컨테이너 정의 (선택, Phase 2+) | `Dockerfile`·`docker-compose.{dev,stg,prod}.yml` | infra 변경 | infra 이슈 |
 
 > **Prisma 분류 (ADR-0037 v1.3)**: 본 프로젝트는 **(a) 분리형** — dev iteration은 `prisma db push`, stg/prod release는 `prisma migrate deploy`. Spring Boot + Flyway integration 류 단일 메커니즘 아님.

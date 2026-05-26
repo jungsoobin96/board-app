@@ -20,6 +20,7 @@ related:
 | Version | Date | Author | Change |
 |---|---|---|---|
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-wbs Phase 3/4) |
+| v0.2 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #5 PR #33 — 3 profile 부팅 smoke 자동화 fan-in. RISK-13/14/15 신설 (smoke timeout false-negative · child zombie · smoke 출력 시크릿 노출). R-N-04 dev only PASS + stg/prod N/A 위임 상태가 #5 PR #33으로 3 profile 실 PASS 정식 충족 baseline 진입(머지 후 효력). |
 
 ## 1. 리스크 일람
 
@@ -39,6 +40,9 @@ related:
 | RISK-10 | 학습 친화성 vs 모범 사례 충돌 (예: TypeScript strict, 트랜잭션 wrapper 추상화) | 2 | 3 | Medium | Sprint 1~5 (코드 작성 단계) | 11 Conventions §3 + §4 (한국어 주석으로 의도 설명) |
 | RISK-11 | 응답 시간 KPI(<200ms) 측정 환경 차이 | 2 | 3 | Medium | Sprint 5 / ISSUE-020 | 로컬 SQLite 기준 명시 + p95 측정 도구 통일 |
 | RISK-12 | 한국어 주석 ≥80% 자동 측정 도구 부재 | 2 | 4 | Medium | Sprint 6 / ISSUE-023 | scripts/check-comment-coverage.sh 작성 또는 수동 grep |
+| RISK-13 | smoke 5초 timeout false-negative (CI runner·WSL2 등 느린 환경) | 3 | 2 | Medium | Sprint 1 / Issue #5 (PR #33) + Sprint 2+ 전 PR (6번째 축) | smoke.ts warmup 500ms + SMOKE_TIMEOUT_MS env override + child stderr 첨부. Found-Q-1로 CI smoke job 별 follow-up 권고 |
+| RISK-14 | smoke child process zombie 잔존 → 후속 EADDRINUSE | 4 | 2 | Medium | Sprint 1 / Issue #5 (PR #33) + Sprint 2+ smoke 호출 전 PR | scripts/smoke.ts SIGTERM → 1초 → SIGKILL fallback + process.on('SIGINT') cleanup. AC-04 검증 |
+| RISK-15 | smoke 출력에 시크릿 노출 (DATABASE_URL 등) — CLAUDE.md §보안 §2 위배 위험 | 5 | 1 | Medium | 전 Sprint smoke 호출 시 | scripts/smoke.ts 출력 화이트리스트 (profile/PORT/ready ms/HTTP status only). reviewer agent grep 검증 + child stderr 5줄 첨부도 raw bash (시크릿 미포함) |
 
 ## 2. 리스크 상세
 
@@ -205,6 +209,51 @@ related:
   - 또는 수동 리뷰 — PR 코멘트에서 "한국어 주석 ≥80% 확인" 체크리스트
   - 11 Conventions §4 주석 형식(JSDoc + 한국어 첫 줄)을 강제하므로 측정은 grep으로 충분
 - **대응 이슈**: ISSUE-023
+
+### RISK-13: smoke 5초 timeout false-negative (CI runner·WSL2)
+
+- **카테고리**: 회귀
+- **설명**: `pnpm smoke:3profiles`가 5초 timeout으로 backend ready 신호 polling. CI runner(GitHub Actions) 또는 WSL2 / 저사양 머신에서 Express + Prisma init이 5초 초과 → backend 정상 부팅 중인데 smoke FAIL 처리.
+- **영향**: 3 — AI 게이트 6번째 축 false-positive BLOCK → 사용자 PR 머지 지연
+- **가능성**: 2 — warmup 500ms + 5.5초 polling 총 시간이 Express+Prisma init 정합 (< 2초)
+- **현재 상태**: 식별 + 본 PR(#5 PR #33)에 완화책 통합
+- **트리거 신호**: CI runner 도입(Found-Q-1 별 이슈) 후 실 측정. 평균 1500ms 미만 정합 확인.
+- **완화 전략**:
+  - scripts/smoke.ts warmup 500ms (첫 polling 전) + polling 250ms × 20회 = 총 5.5초
+  - `SMOKE_TIMEOUT_MS` env override 지원 (default 5000)
+  - child stderr 첫 5줄 PR body 첨부 (Express listening 신호 vs Prisma error 구분)
+  - Found-Q-1 (CI smoke job 신설) follow-up 이슈에서 CI runner 측정값 수집
+- **대응 이슈**: Issue #5 (본 PR), Found-Q-1 (follow-up)
+
+### RISK-14: smoke child process zombie 잔존
+
+- **카테고리**: 운영
+- **설명**: scripts/smoke.ts가 spawn한 backend child process를 kill 못 시키고 exit. PORT 3000/3001/3002 점유 잔존 → 다음 smoke 또는 `pnpm dev` 실행 시 EADDRINUSE. Windows에서 더 까다로움.
+- **영향**: 4 — 개발 흐름 중단 + 수동 `lsof -i :3000 | kill` 또는 `Get-NetTCPConnection` 필요
+- **가능성**: 2 — SIGTERM → 1초 grace → SIGKILL fallback 명시 + process.on('SIGINT')·('exit') 양쪽 cleanup
+- **현재 상태**: 식별 + 본 PR(#5 PR #33)에 완화책 통합 (smoke.ts:killChild)
+- **트리거 신호**: smoke 후 `lsof -i :3000` 결과 1건 이상 (= zombie).
+- **완화 전략**:
+  - SIGTERM → SIGKILL 2단 fallback (smoke.ts:killChild)
+  - process SIGINT 핸들러 등록 (사용자 Ctrl+C 대비)
+  - try/finally로 fail path에도 cleanup 보장
+  - AC-04 명시 (smoke 후 PORT 점유 0건 자동 검증)
+- **대응 이슈**: Issue #5 (본 PR)
+
+### RISK-15: smoke 출력에 시크릿 노출 (CLAUDE.md 보안 §2 위배 위험)
+
+- **카테고리**: 보안
+- **설명**: scripts/smoke.ts가 디버깅용으로 `console.log(process.env)` 또는 `DATABASE_URL` 같은 출력 추가하면 PR diff에 시크릿 값 leak. MVP는 시크릿 없지만 Phase 2+ secret manager 도입 시 치명적.
+- **영향**: 5 — CLAUDE.md 보안 §1·§2 절대 규칙 위배
+- **가능성**: 1 — smoke.ts 출력 화이트리스트 (profile/PORT/ready ms/HTTP status only) + reviewer agent grep 명시
+- **현재 상태**: 완화 (본 PR 출력 화이트리스트 + reviewer grep PASS)
+- **트리거 신호**: PR diff에 `console.log(process.env`·`DATABASE_URL`·`JWT_SECRET` 패턴 1건 이상 → 즉시 BLOCK + revert.
+- **완화 전략**:
+  - smoke.ts 출력 화이트리스트 강제 — 시크릿 값 절대 출력 금지
+  - child stderr/stdout pipe는 raw 전달이지만 backend 정상이면 시크릿 미출력 (Express log = method/path/status, Prisma log = query만, LOG_LEVEL=info/warn 억제)
+  - P9 code-review reviewer agent가 매 smoke 변경 PR에서 `console.log(process.env\|DATABASE_URL\|JWT_SECRET)` grep 0건 강제
+  - settings.json PreToolUse 훅이 `.env*` 직접 Write/Edit 차단
+- **대응 이슈**: Issue #5 (본 PR — 화이트리스트 도입), Sprint 2+ smoke 본문 변경 PR마다 reviewer grep 의무
 
 ## 3. High 리스크 단계적 롤아웃
 
