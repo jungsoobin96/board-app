@@ -22,6 +22,7 @@ related:
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-design Phase 2/4) |
 | v0.2 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #6 PR — F-05 (댓글 작성·삭제) §1 단위 + §2 통합 fan-in. ADR-0035 WARN 1건 해소 (잔여 F-08·F-12는 #7·Sprint 6 별 진행). |
 | v0.3 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #7 PR — F-02 (태그 필터) + F-08 (인기 태그 사이드바) §1·§2 fan-in. ADR-0035 WARN 2건 추가 해소 (잔여 F-12만 Sprint 6 별 진행). |
+| v0.4 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #9 PR — R-N-02 §2 통합 보강 fan-in (전 9 endpoint × ~2 에러 + notFoundHandler + 의도 throw 500). 단위 layer와 별 axis 명시. |
 
 ## 1. 단위 테스트 카탈로그
 
@@ -261,6 +262,16 @@ related:
 대상: 전 엔드포인트의 4xx/5xx (의도 throw 주입)
 - Happy: 모든 에러 응답이 `{ error: string }` 형식
 - Failure: 스택이 body에 포함된 응답 → fail
+
+### R-N-02: 에러 schema 일관성 — 통합 (보강)
+
+출처: 04#R-N-02, 11 §2 PREFIX, M10 errorHandler
+테스트 레벨: 통합
+대상: 전 endpoint(9건) 4xx/5xx 응답 + notFoundHandler + 의도 throw 500
+- Happy 4xx: 9 endpoint × ~2 에러 케이스 모두 `{error:string}` schema + stack/code 미노출 (expectErrorSchema 헬퍼)
+- Failure 500: vi.mock(tag.service.list) throw 주입 → 500 + "서버 오류가 발생했습니다" + stderr stack
+- Failure 404: notFoundHandler `/nonexistent-path` → 404 + "요청한 리소스를 찾을 수 없습니다"
+- 발현: Sprint 2 / Issue #9 (PR feat/error-schema-integration-issue-9). 단위 errorHandler.test.ts(#2)와 별 layer
 
 ### R-N-04: 3 profile 부팅 smoke
 
