@@ -62,6 +62,35 @@ describe('R-F-07 cascade integration', () => {
     expect(await prisma.tag.count()).toBe(2);
   });
 
+  it('트랜잭션 throw 주입 시 모든 row가 rollback (Article·Comment·Tag·ArticleTag 0건)', async () => {
+    // Given: 빈 DB 상태에서 transaction 안에서 4 테이블 모두 시드 후 throw
+    // When/Then: rollback으로 모든 시드가 미반영되어야 함
+    await expect(
+      prisma.$transaction(async (tx) => {
+        const article = await tx.article.create({
+          data: { title: 'rollback', body: 'b', author: 'a' },
+        });
+        await tx.comment.createMany({
+          data: [
+            { body: 'c1', author: 'a', articleId: article.id },
+            { body: 'c2', author: 'b', articleId: article.id },
+          ],
+        });
+        const tag = await tx.tag.create({ data: { name: 'rollback-tag' } });
+        await tx.articleTag.create({
+          data: { articleId: article.id, tagId: tag.id },
+        });
+        throw new Error('intentional rollback for cascade test');
+      }),
+    ).rejects.toThrow('intentional rollback for cascade test');
+
+    // Then: 모든 4 테이블이 0건 (rollback으로 commit 안 됨)
+    expect(await prisma.article.count()).toBe(0);
+    expect(await prisma.comment.count()).toBe(0);
+    expect(await prisma.tag.count()).toBe(0);
+    expect(await prisma.articleTag.count()).toBe(0);
+  });
+
   it('태그 삭제 시 종속 ArticleTag만 cascade로 삭제 (Article·Comment 잔존)', async () => {
     // Given: 글 1 + 댓글 1 + 태그 1 + ArticleTag 1
     const article = await prisma.article.create({
