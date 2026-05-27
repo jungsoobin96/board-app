@@ -73,6 +73,7 @@ related:
 | A. Derived | pre-existing TS 에러 3건 정정 (`client.ts:18`, `routes.tsx:39·46`) | Sprint 5 follow-up 이슈 신규 등록 권고 |
 | A. Derived | branch prefix `(feat\|mod\|bug\|design)/` vs PR/이슈 title 정규식 `(feat\|fix\|chore\|docs\|test\|refactor)` 정책 불일치 — #51 발견 + #52에서 재확인 | **Sprint 5 #56 등록** (P1, type:chore, area:infra). WBS 23 이슈 + 후속 PR 다수 영향. 옵션 3건(정규식 확장 / branch prefix 변경 / 둘 다 ADR 명문화) 검토 |
 | A. Derived | R-OPS-* 운영 비기능 R-ID 체계 신설 + 04-srs §3 정식 등록 | **Sprint 5 #52 PR #55 머지 완료** (merge_commit=43e26a0). ADR-0002 + 4건(AUTO-LABEL/SMOKE/WORKFLOW/DOCS-SYNC) + 13/02-catalog fan-in. #47/#51 ad-hoc 우회 정합 회복 |
+| (정규) Sprint 5 | #18 태그 필터 UX 마무리 + URL state | **Sprint 5 #18 PR #58 머지 완료** (merge_commit=1f27461). TagList active 재클릭 해제 toggle 1줄 + RTL +2 (85 passed). URL state는 Sprint 3 #12에서 이미 구현, 본 PR은 toggle UX 마무리. ui_changed=false 사용자 override. #51/#52 회복 후 자연 회귀 확정 |
 | A. Derived | frontend `dev:prod` script 신설 + backend 정합 (ADR-0037 N/A 해소) | Sprint 5 follow-up |
 | A. Derived | RISK-03 deps 문구 정정 (`[data, status]` 권고 vs `[data]` 실제) | Sprint 5 follow-up (minor doc fix) |
 | A. Derived | Toast portal·queue·stacking (Sprint 5+) | Sprint 5 또는 Sprint 6 backlog |
