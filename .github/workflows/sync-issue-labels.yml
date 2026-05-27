@@ -7,10 +7,23 @@ name: Sync Issue Labels on PR
 #
 # linked issue 파싱: PR body의 `Closes|Fixes|Resolves #N` (대소문자 무관)
 # draft PR은 ready_for_review 시점에 처리 (opened만으로는 draft 진입 시 조기 전이 방지)
+#
+# Issue #47 (Sprint 5 P0, bug/sync-issue-labels-workflow):
+#   본 workflow가 Sprint 1~4 모든 PR에서 0건 트리거된 근본 원인은
+#   Repository Settings → Actions → Workflow permissions 가 read-only로
+#   설정돼 GITHUB_TOKEN 기본 권한이 부족했던 것. 본 workflow의 `permissions:`
+#   block은 *workflow 권한 상한 안에서만* override 가능 (GitHub 정책).
+#   Fix는 Settings API로 `default_workflow_permissions: write` 적용 (별도 단계).
+#   상세: docs/features/bug-sync-issue-labels-workflow/*.{investigation,contract,plan}.md
 
 on:
   pull_request:
     types: [opened, ready_for_review, closed]
+
+# 같은 PR의 중복 트리거 시 직전 run cancel — race condition 완화 (Issue #47 F-RISK-03)
+concurrency:
+  group: sync-issue-labels-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 permissions:
   issues: write
