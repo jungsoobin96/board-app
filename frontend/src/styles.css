@@ -1,0 +1,64 @@
+/**
+ * Conduit Lite 글로벌 스타일 시트.
+ * @tailwind directives + 10 §3 design token 4종(Color·Typography·Spacing·Component primitives) CSS Variables 정의.
+ * Variables가 source-of-truth — tailwind.config.ts theme.extend가 본 변수를 인용 (ADR-0038).
+ * 다크 모드 확장(Phase 2) 시 본 :root만 갱신하면 모든 utility 자동 반영.
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Color — 10 §3 (12 토큰) */
+  --color-primary-50: #eff6ff;
+  --color-primary-500: #3b82f6;
+  --color-primary-700: #1d4ed8;
+  --color-secondary-500: #10b981;
+  --color-secondary-700: #047857;
+  --color-neutral-0: #ffffff;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-700: #374151;
+  --color-neutral-900: #111827;
+  --color-danger-500: #ef4444;
+  --color-danger-700: #b91c1c;
+
+  /* Typography — 10 §3 (font-family + scale + weight) */
+  --font-family-base: 'Pretendard', -apple-system, system-ui, sans-serif;
+  --font-family-mono: ui-monospace, 'JetBrains Mono', monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Spacing — 10 §3 (7단) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+}
+
+/* 기본 body 스타일 */
+body {
+  font-family: var(--font-family-base);
+  color: var(--color-neutral-700);
+  background-color: var(--color-neutral-0);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Focus 가시성 — 10 §4 a11y */
+*:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
