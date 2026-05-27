@@ -18,11 +18,12 @@ export const Editor = (): JSX.Element => {
   const idParsed = idParam ? Number(idParam) : NaN;
   const id = Number.isInteger(idParsed) && idParsed >= 1 ? idParsed : -1;
 
+  // 수정 모드면 useArticle 호출, 신규 모드면 호출 skip (id=-1로 hook 자체 guard 발동).
+  // hook은 무조건 호출 (React Rules of Hooks) — 분기 처리는 hook 이후로.
+  const articleState = useArticle(isEdit ? id : -1);
+
   // 수정 모드 invalid id (예: /editor/abc) → NotFound
   if (isEdit && id === -1) return <NotFound />;
-
-  // 수정 모드면 useArticle 호출, 신규 모드면 호출 skip (id=-1로 hook 자체 guard 발동)
-  const articleState = useArticle(isEdit ? id : -1);
 
   // 수정 모드 — 로딩 / 404 / error 분기
   if (isEdit) {
