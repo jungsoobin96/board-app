@@ -75,7 +75,7 @@ related:
 | A. Derived | RISK-03 deps 문구 정정 (`[data, status]` 권고 vs `[data]` 실제) | Sprint 5 follow-up (minor doc fix) |
 | A. Derived | Toast portal·queue·stacking (Sprint 5+) | Sprint 5 또는 Sprint 6 backlog |
 | A. Derived | ErrorBoundary Sentry 외부 송신 wiring | 별도 ADR + Sprint 6 후보 |
-| C. Bug | GitHub Actions sync-issue-labels.yml workflow 0 runs 디버그 | **Sprint 5 #47 → PR #49 머지** (merge_commit=67ae9cc, partial fix). H4 가설(`default_workflow_permissions: read`) Settings API로 `write` 적용 성공 + workflow YAML concurrency 보강 머지 완료, 그러나 **전역 trigger 여전히 0건** — Cache 0 bytes, public+enabled 상태인데 어떤 PR 이벤트에도 동작 안 함. **추가 follow-up 이슈 신설 후보** (GitHub UI Settings → Actions → General toggle 직접 확인 / 사용자 GitHub plan 옵션 검토 / Actions service-side disabled 가능성) |
+| C. Bug | GitHub Actions sync-issue-labels.yml workflow 0 runs 디버그 | **Sprint 5 #47 PR #49 (partial fix, merge_commit=67ae9cc) + #51 PR #53 (FULL fix, merge_commit=39bcef1, 2026-05-27) — ADR-0029 자동화 완전 회복**. #47 H4 가설(`default_workflow_permissions: read`)을 Settings API로 `write` 적용했으나 runs 0건 지속. #51에서 P3a 사용자 UI 협업(Settings → Actions → General 스크린샷 + Actions 페이지 "Actions Enabled." 일회성 배너 관찰)으로 **H6 가설 자연 확정**: GitHub은 신규 personal account의 신규 repo에 대해 owner가 Actions 탭을 직접 방문할 때까지 dispatcher를 silent로 비활성화 (inactive enable). 사용자 P3a 단계 Actions 탭 방문으로 활성화 완료 → 본 PR이 활성화 이후 첫 PR이므로 trigger 자연 발생으로 H6 확정 (실측: sync-issue-labels.yml open success + 머지 후 +1 = total 2 + 이슈 #51 라벨 자동 전이/close/제거 완료). issue-pr-title-lint.yml 동시 회복. 발견 사항 — branch `bug/` vs title 정규식 정책 불일치 (별도 follow-up 후보). |
 | A. Derived | gstack `/qa` LLM 환경 셋업 (자동 스크린샷·콘솔 grep) | Sprint 5 인프라 이슈 |
 
 ## 6. 우선순위·일정 보정
