@@ -20,6 +20,9 @@ export function useArticle(id: number): UseArticleState {
   const [state, setState] = useState<UseArticleState>(initialState);
 
   useEffect(() => {
+    // id invalid (호출처에서 -1 등 guard) → fetch 자체 skip
+    if (id < 1) return;
+
     const controller = new AbortController();
     setState({ status: 'loading', data: null, error: null });
 

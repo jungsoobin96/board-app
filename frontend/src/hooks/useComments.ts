@@ -20,6 +20,9 @@ export function useComments(articleId: number): UseCommentsState {
   const [state, setState] = useState<UseCommentsState>(initialState);
 
   useEffect(() => {
+    // articleId invalid → fetch 자체 skip
+    if (articleId < 1) return;
+
     const controller = new AbortController();
     setState({ status: 'loading', data: null, error: null });
 
