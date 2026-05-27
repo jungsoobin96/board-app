@@ -25,6 +25,7 @@ related:
 | v0.4 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #9 PR — R-N-02 §2 통합 보강 fan-in (전 9 endpoint × ~2 에러 + notFoundHandler + 의도 throw 500). 단위 layer와 별 axis 명시. |
 | v0.5 | 2026-05-26 | jungsoobin96@users.noreply.github.com | Issue #10 PR — R-F-08 §1 단위 보강(matchRoute 헬퍼) + F-11 §1 skeleton 발현 fan-in (frontend 골격 도입). 정밀 반응형은 Sprint 5 #21 별 진행. |
 | v0.6 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #11 PR — R-N-02 §1 frontend layer 보강 fan-in (normalizeResponse + normalizeNetworkError + 9 method URL/method 정합). backend §1 errorHandler 단위(#2) + 통합(#9) 위에 FE client 단위 layer 추가. R-N-02 매트릭스 ✅·✅·✅ 그대로. |
+| v0.7 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #12 PR — R-F-01·R-F-04·F-01·F-02·F-08·F-11 §1 단위 fan-in (Home 페이지 — useArticles 5상태·AbortController·ArticleCard·Pagination·TagList RTL snapshot). MSW 통합 1건은 vitest jsdom 통합 미작동으로 skip + follow-up. R-N-06 a11y 시맨틱 + focus ring 발현. |
 
 ## 1. 단위 테스트 카탈로그
 
