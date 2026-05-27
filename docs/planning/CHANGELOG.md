@@ -9,11 +9,11 @@
 - **Sprint 1 진행**: 5/5 완료 — 100% COMPLETE
 - **Sprint 2 진행**: 4/4 완료 (#6·#7·#8·#9 모두 머지) — **Sprint 2 100% COMPLETE**
 - **Sprint 3 진행**: 4/4 완료 (#10·#11·#12·#13 모두 머지) — **Sprint 3 100% COMPLETE**
-- **Sprint 4 진행**: 0/4 머지 + 1 PR OPEN (#14 본 PR) → Editor 페이지 (글 작성·수정) 첫 PR
+- **Sprint 4 진행**: 1/4 머지 (#14 PR #42 머지 완료) + 1 PR OPEN (#15 본 PR) → 글 삭제 UX + cascade 시각 (Sprint 4 두 번째 PR)
 - **Gates**: A=PASS, B=PASS, C=PASS (2026-05-25)
 - **Branch protection**: 미적용 (Sprint 1 follow-up 권고)
 - **`pr-body-checkboxes` status check workflow**: 미등록 (Sprint 1 follow-up 권고)
-- **Currently in review**: PR #N (이슈 #14, Editor 페이지 글 작성·수정. ui_changed=true **4번째 발동**. Sprint 4 첫 PR)
+- **Currently in review**: PR #N (이슈 #15, 글 삭제 UX + cascade 시각. ui_changed=true **5번째 발동**. Sprint 4 두 번째 PR)
 - **Sprint 3 Follow-up 이슈 후보** (#10·#11·#12·#13 발견, 미등록): (1) Pretendard self-host / (2) frontend smoke 3 profile / (3) matchRoute trailing slash / (4) frontend/src/index.ts placeholder / (5) Component primitives (Sprint 4) / (6) vite-env.d.ts / (7) request() headers spread / (8) MSW 2.x + vitest jsdom 통합 디버깅 / (9) Home 에러 재시도 버튼 / (10) Pagination ellipsis truncation / (11) formatDate 유틸 분리 (#13 MINOR-01) / (12) seed:dev idempotent 보장 (id 매번 증가)
 - **Sprint 2 Follow-up 이슈 후보** (미등록): (a) asyncHandler 유틸 분리 (3 controller 중복) / (b) tags integration 시드 Promise.all / (c) error-schema afterEach mock 단순화
 - **Sprint 1 Follow-up 이슈 후보** (미등록): (i) CI smoke job 신설 / (ii) pollReady fetch body 명시 cancel / (iii) engines `>=20.11.0` 정정 / (iv) GitHub Actions workflows 0 runs + sync-issue-labels.yml / (v) 13/02-catalog F-12 fan-in (Sprint 6)
@@ -22,7 +22,8 @@
 
 ### 2026-05-27 (Sprint 4 진입)
 
-- **PR #N OPEN** — `feat(frontend): Editor 페이지 (글 작성·수정) (#14)`. Sprint 4 **첫 PR**. Editor placeholder → 실 form (controlled 4 필드 + 인라인 검증 + createArticle/updateArticle + navigate). EditorForm 컴포넌트 신설 (~215 line) + Editor 신구 분기 (useArticle 사전 로드) + Article "수정" 버튼 onClick=navigate('/editor/:id') 결합. 4 commits / +600 lines. **ui_changed=true 4번째 발동** — 사용자 검증 + Editor 신구/검증 에러 스크린샷 첨부. reviewer verdict=PASS, MAJOR 0/MINOR 2/INFO 3. MINOR-01 (React hook 순서) 같은 PR 보정 (9b62059). 단위 59 + 1 skip = 60 passed. 09 API spec createArticle/updateArticle 첫 사용처. 13/02-catalog v0.9: R-F-02·R-F-05·F-03·F-06·F-11 §1 단위 fan-in.
+- **PR #N OPEN** — `feat(frontend): 글 삭제 UX + cascade 시각 확인 (#15)`. Sprint 4 **두 번째 PR**. Article 페이지 mount-only 삭제 핸들러를 ConfirmModal + deleteArticle + navigate('/')로 결합. ConfirmModal 컴포넌트 신설 (~125 line, role="dialog" + aria-modal + useId + ESC + 최소 focus trap + controlled error pattern). Article.tsx handleConfirmDelete try/catch + pending race 차단. 4 commits / +400 lines. **ui_changed=true 5번째 발동** — 사용자 검증 + 모달/cascade/404 스크린샷 3장 첨부. reviewer verdict=PASS, MAJOR 0/MINOR 2/INFO 2. MINOR-1 (aria-labelledby useId) + MINOR-2 (onCancel ref pattern) 같은 PR 보정 (ac9c798). 단위 66 + 1 skip = 67 passed. cascade는 #8 backend 통합 보장 위에 frontend 시각 확인 fan-in. 13/02-catalog v0.10: R-F-03·R-F-07 §1 단위 FE 시나리오 추가.
+- **PR #42 머지** — `feat(frontend): Editor 페이지 (글 작성·수정) (#14)`. Sprint 4 **첫 PR**. Editor placeholder → 실 form (controlled 4 필드 + 인라인 검증 + createArticle/updateArticle + navigate). EditorForm 컴포넌트 신설 + Editor 신구 분기 + Article "수정" 버튼 결합. 4 commits / +600 lines. ui_changed=true 4번째 발동. reviewer PASS (MAJOR 0/MINOR 2/INFO 3). MINOR-01 같은 PR 보정 (9b62059). **Sprint 4 첫 LLM 직접 build+test PASS** baseline. 사용자 직접 머지 merge_commit=b432718.
 
 ### 2026-05-27 (Sprint 3 — 100% COMPLETE)
 
@@ -79,3 +80,4 @@
 | v0.9 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Sprint 3 2/4 머지 + #12 PR OPEN. #11 PR #39 머지 (merge_commit=8340fa4). Home 페이지 실 구현. reviewer 1차 NEEDS-WORK (MAJOR-01 signal) → 보정 → 재검수 PASS. 39/40 unit + 1 skip (MSW 2.x + vitest jsdom). Sprint 3 follow-up +3 (MSW 디버깅 / 재시도 버튼 / Pagination truncation). |
 | v0.10 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Sprint 3 3/4 머지 + #13 PR OPEN. #12 PR #40 머지 (merge_commit=85ab113). Article 상세 + 댓글 목록 실 구현. reviewer PASS (MAJOR 0). MINOR-02 같은 PR 보정. 48/49 unit + 1 skip. Sprint 3 follow-up +2 (formatDate 유틸 / seed:dev idempotent). 본 PR 머지 시 Sprint 3 100% 완결. |
 | v0.11 | 2026-05-27 | jungsoobin96@users.noreply.github.com | **Sprint 3 100% COMPLETE** (#13 PR #41 머지, merge_commit=15ccfdf) + Sprint 4 진입 (#14 PR OPEN). Editor 페이지 실 form 구현. EditorForm controlled + Editor 신구 분기. 09 API spec createArticle/updateArticle 첫 사용처. reviewer PASS (MAJOR 0/MINOR 2). MINOR-01 (React hook 순서) 같은 PR 보정. 59/60 unit + 1 skip. ui_changed=true 4번째 발동. |
+| v0.12 | 2026-05-27 | jungsoobin96@users.noreply.github.com | **Sprint 4 1/4 머지 (#14 PR #42 = b432718) + Sprint 4 #15 PR OPEN**. Article 삭제 흐름 결합 — ConfirmModal 신규 + Article handleConfirmDelete + cascade 시각. reviewer PASS (MAJOR 0/MINOR 2/INFO 2). MINOR-1·2 같은 PR 보정 (ac9c798). 66/67 unit + 1 skip. ui_changed=true 5번째 발동. 13/02-catalog v0.10: R-F-03·R-F-07 §1 FE 시나리오 추가. |
