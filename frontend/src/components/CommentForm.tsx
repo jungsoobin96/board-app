@@ -7,7 +7,7 @@
  * 성공 시 body만 reset (author는 유지 — 연속 작성 UX). 실패 시 NormalizedError 상단 alert + 입력값 보존.
  * submit 중 disabled로 race(중복 작성) 차단.
  */
-import { useState, type FormEvent } from 'react';
+import { useId, useState, type FormEvent } from 'react';
 import type { CommentInput } from '@app/shared';
 import { NormalizedError } from '@app/shared';
 
@@ -30,6 +30,9 @@ function validate(body: string, author: string): FieldErrors {
 }
 
 export const CommentForm = ({ onSubmit }: CommentFormProps): JSX.Element => {
+  const titleId = useId();
+  const bodyId = useId();
+  const authorId = useId();
   const [body, setBody] = useState('');
   const [author, setAuthor] = useState('');
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -60,10 +63,10 @@ export const CommentForm = ({ onSubmit }: CommentFormProps): JSX.Element => {
   return (
     <form
       onSubmit={handleSubmit}
-      aria-labelledby="comment-form-title"
+      aria-labelledby={titleId}
       className="mt-8 border border-neutral-300 rounded p-4"
     >
-      <h3 id="comment-form-title" className="text-sm font-semibold text-neutral-900 mb-3">
+      <h3 id={titleId} className="text-sm font-semibold text-neutral-900 mb-3">
         댓글 작성
       </h3>
       {submitError && (
@@ -72,24 +75,24 @@ export const CommentForm = ({ onSubmit }: CommentFormProps): JSX.Element => {
         </div>
       )}
       <div className="mb-3">
-        <label htmlFor="comment-body" className="block text-xs font-semibold text-neutral-700 mb-1">
+        <label htmlFor={bodyId} className="block text-xs font-semibold text-neutral-700 mb-1">
           본문 <span className="text-danger-500">*</span>
         </label>
         <textarea
-          id="comment-body"
+          id={bodyId}
           value={body}
           onChange={(e) => setBody(e.target.value)}
           rows={3}
-          className="w-full border border-neutral-300 rounded p-2 text-sm focus:border-primary-500 focus:outline-none"
+          className="w-full border border-neutral-300 rounded p-2 text-sm focus:border-primary-500 focus:outline-none sm:min-h-[6rem]"
         />
         {errors.body && <p className="text-danger-500 text-xs mt-1">{errors.body}</p>}
       </div>
       <div className="mb-3">
-        <label htmlFor="comment-author" className="block text-xs font-semibold text-neutral-700 mb-1">
+        <label htmlFor={authorId} className="block text-xs font-semibold text-neutral-700 mb-1">
           작성자 <span className="text-danger-500">*</span>
         </label>
         <input
-          id="comment-author"
+          id={authorId}
           type="text"
           value={author}
           onChange={(e) => setAuthor(e.target.value)}
