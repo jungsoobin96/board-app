@@ -1,12 +1,12 @@
 ---
 doc_type: test-design
-version: v0.1 (Draft)
-status: Draft
-author: woosung.ahn@bespinglobal.com
-date: 2026-05-22
+version: v0.13
+status: Accepted
+author: jungsoobin96@users.noreply.github.com
+date: 2026-05-27
 gate: C
 related:
-  R-ID: [R-F-01, R-F-02, R-F-03, R-F-04, R-F-05, R-F-06, R-F-07, R-F-08, R-N-01, R-N-02, R-N-03, R-N-04, R-N-05, R-N-06, R-N-07]
+  R-ID: [R-F-01, R-F-02, R-F-03, R-F-04, R-F-05, R-F-06, R-F-07, R-F-08, R-N-01, R-N-02, R-N-03, R-N-04, R-N-05, R-N-06, R-N-07, R-OPS-AUTO-LABEL, R-OPS-SMOKE, R-OPS-WORKFLOW, R-OPS-DOCS-SYNC]
   F-ID: [F-01, F-02, F-03, F-04, F-05, F-06, F-07, F-08, F-09, F-10, F-11, F-12]
   supersedes: null
 ---
@@ -31,6 +31,7 @@ related:
 | v0.10 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #15 PR — R-F-03·R-F-07 §1 단위 FE 시나리오 추가 (Article 삭제 흐름 — ConfirmModal RTL 4건 + Article RTL 3건). 삭제 모달 노출·확정 deleteArticle+navigate('/')·실패 alert+모달유지·pending race 차단·cascade 시각(navigate 후 미노출 + direct URL 재진입 → NotFound). R-F-03·R-F-07 매트릭스 그대로(✅·✅·✅). |
 | v0.11 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #16 PR — R-F-05·R-F-06 §1 단위 FE 시나리오 추가 (댓글 작성/삭제 UI — CommentForm RTL 4건 + CommentList onDelete 1건 + Article 댓글 흐름 RTL 3건). CommentForm controlled body·author + M9 trim 0자 차단 + body reset·author 유지 + NormalizedError alert + 응답 후 추가 prepend + ConfirmModal 재사용(#15) + confirmTarget discriminated union으로 글/댓글 모달 단일 mount 분기. R-F-05·R-F-06 매트릭스 그대로(✅·✅·✅). |
 | v0.12 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #17 PR — R-F-08·R-N-02 §1 단위 FE 회귀 보호 시나리오 추가 (NotFound + ErrorBoundary 폴리시 — Toast RTL 4건 + NotFound RTL 2건 + ErrorBoundary RTL 3건). Toast success/error variant + auto-dismiss 3000ms (vi fake timer) + durationMs=null 비활성화 + 닫기 onDismiss. NotFound heading + Link href="/". ErrorBoundary 정상 children + throwing → role=alert + 한국어 fallback + Error.message·stack 미노출(queryByText null) R-N-02 강제. R-F-08·R-N-02 매트릭스 그대로(✅·✅·✅ / ✅·✅·✅). |
+| v0.13 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #52 PR — R-OPS-* 4건(R-OPS-AUTO-LABEL/SMOKE/WORKFLOW/DOCS-SYNC) §2 통합 fan-in + §4 매트릭스 4행 추가. 04-srs §3 R-OPS-* 정식 등록(ADR-0002)과 동기. R-OPS-*는 운영 자동화이므로 단위 N/A + E2E N/A + 통합 ✅ 패턴. frontmatter status Draft → Accepted, related.R-ID에 R-OPS-* 4건 추가. |
 
 ## 1. 단위 테스트 카탈로그
 
@@ -367,6 +368,42 @@ related:
 - Happy: dev/stg/prod 3 profile 모두 5초 이내 ready + 200 응답
 - Failure: 어느 profile 부팅 실패 → PR 머지 BLOCK (CLAUDE.md 필수 규칙 #10)
 
+### R-OPS-AUTO-LABEL: FSM 라벨 자동 전이 통합
+
+출처: 04#R-OPS-AUTO-LABEL, ADR-0029
+테스트 레벨: 통합
+대상: `.github/workflows/sync-issue-labels.yml` PR open/머지 trigger + 이슈 라벨 전이
+- Happy: PR open + body `Closes #N` → 30초 이내 `gh issue view N` 라벨에 `status:in-review` 포함, `status:in-progress` 부재. PR 머지 → 30초 이내 state=CLOSED + `status:*` 라벨 0건
+- Failure: dispatcher 비활성(#51 H6 cycle) / `Closes #N` 누락 / `default_workflow_permissions: read`(#47 H4) → 라벨 미전이
+- 발현: #47 PR #49 (partial fix, H4) + #51 PR #53 (FULL fix, H6 확정) — #52~ 자연 회귀 관찰
+
+### R-OPS-SMOKE: 3 profile 부팅 smoke 자동화 통합
+
+출처: 04#R-OPS-SMOKE, ADR-0037 v1.1, Sprint 1 #5 baseline
+테스트 레벨: 통합
+대상: `pnpm run smoke:3profiles` 실행 결과 — dev(port 3000)/stg(3001)/prod(3002) ready 신호
+- Happy: 3/3 PASS + 각 profile ready < 5000ms (typical < 100ms)
+- Failure: 한 profile 부팅 실패 → AI 게이트 6번째 축 BLOCK → PR 머지 차단 (CLAUDE.md 필수 규칙 #10)
+- R-N-04와 별 axis: R-N-04는 fresh checkout 결과 기준, R-OPS-SMOKE는 매 PR 자동화 신뢰성 기준
+
+### R-OPS-WORKFLOW: GitHub Actions workflow 양축 검증 통합
+
+출처: 04#R-OPS-WORKFLOW, ADR-0047, CLAUDE.md 필수 규칙 #13
+테스트 레벨: 통합
+대상: 매 PR Manual verification 절 양축 검증 1줄 + issue-pr-title-lint.yml conclusion=success
+- Happy: PR body에 `- [ ] GitHub Actions 워크플로 로컬 검증 (act 또는 manual): <명령> → <결과/사유>` 1줄 명시 + title 정규식 `^(feat|fix|chore|docs|test|refactor)\(...\)` 매칭 → lint success
+- Failure: 양축 검증 누락 → AI 게이트 미통과. title prefix `mod/bug/design` 등 정규식 미정합 → fail (Sprint 5 follow-up — branch prefix vs title prefix 정책 불일치)
+- N/A 케이스: `.github/workflows/` 디렉토리 부재 또는 PR 트리거 워크플로 0개 → 사유 명시 후 통과
+
+### R-OPS-DOCS-SYNC: LOCAL.md ↔ 12-scaffolding 동기 통합
+
+출처: 04#R-OPS-DOCS-SYNC, ADR-0040, CLAUDE.md 필수 규칙 #10
+테스트 레벨: 통합
+대상: `git diff main...HEAD --name-only`로 부팅 자산(`.env.{dev,stg,prod}.example`·migrations·lockfile·setup scripts) 변경분 + LOCAL.md 동시 갱신 여부
+- Happy: 부팅 자산 변경 시 LOCAL.md §2 셋업·§3 부팅 명령·§4 자산 표 같은 PR diff 포함 + 12-scaffolding/typescript.md §7 동기
+- Failure: 부팅 자산은 변했는데 LOCAL.md 미갱신 → AI 게이트 6번째 축 BLOCK
+- N/A 케이스: 부팅 자산 변경 0건 → `LOCAL.md 동기 = N/A 부팅 자산 변경 없음` 명시 허용
+
 ## 3. E2E 테스트 카탈로그
 
 본 §은 *E2E 레벨* — Playwright(또는 gstack `/qa` 수동)로 브라우저 자동화. 사용자 골든 패스가 본 §의 대상.
@@ -455,6 +492,10 @@ related:
 | R-N-05 (한국어 주석 ≥80%) | ✅ | N/A | N/A | 정적 grep 룰 단위 |
 | R-N-06 (반응형) | ✅ | N/A | ✅ | snapshot + viewport E2E |
 | R-N-07 (시크릿 안내) | N/A | N/A | N/A | 정적 분석 + PreToolUse 훅 (테스트 외) |
+| R-OPS-AUTO-LABEL (FSM 라벨 자동 전이) | N/A | ✅ | N/A | sync-issue-labels.yml 통합 (ADR-0029) |
+| R-OPS-SMOKE (3 profile 부팅 자동화) | N/A | ✅ | N/A | `pnpm run smoke:3profiles` (ADR-0037 v1.1) |
+| R-OPS-WORKFLOW (workflow 양축 검증) | N/A | ✅ | N/A | manual reproduction + actions runs (ADR-0047) |
+| R-OPS-DOCS-SYNC (LOCAL.md 동기) | N/A | ✅ | N/A | `git diff` 부팅 자산 + LOCAL.md 동기 (ADR-0040) |
 | F-01 (글 목록 + 페이지네이션) | ✅ | ✅ | ✅ | R-F-01 묶음 |
 | F-02 (태그 필터) | ✅ | ✅ | ✅ | R-F-04 묶음 |
 | F-03 (글 작성) | ✅ | ✅ | ✅ | R-F-02 묶음 |
