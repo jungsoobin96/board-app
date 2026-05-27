@@ -1,12 +1,16 @@
 /**
- * S-02 Article 상세 — 본문 + 메타 + 태그 + 댓글 목록 + 수정/삭제 버튼 mount.
+ * S-02 Article 상세 — 본문 + 메타 + 태그 + 댓글 목록 + 수정/삭제 흐름.
  * 404 시 NotFound 컴포넌트 직 렌더 (URL 유지).
- * 수정/삭제 핸들러는 Sprint 4 별 PR에서 결합 — 본 PR은 mount만.
+ * 수정 → /editor/:id (#14 PR #42), 삭제 → ConfirmModal + deleteArticle + navigate (#15 본 PR).
  */
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { NormalizedError } from '@app/shared';
 import { useArticle } from '../hooks/useArticle';
 import { useComments } from '../hooks/useComments';
+import { deleteArticle } from '../api/client';
 import { CommentList } from '../components/CommentList';
+import { ConfirmModal } from '../components/ConfirmModal';
 import { NotFound } from './NotFound';
 
 export const Article = (): JSX.Element => {
@@ -17,6 +21,9 @@ export const Article = (): JSX.Element => {
 
   const articleState = useArticle(id);
   const commentsState = useComments(id);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deletePending, setDeletePending] = useState(false);
+  const [deleteError, setDeleteError] = useState<NormalizedError | null>(null);
 
   // id 자체가 invalid → NotFound
   if (id === -1) return <NotFound />;
@@ -54,13 +61,34 @@ export const Article = (): JSX.Element => {
 
   const article = articleState.data;
 
-  // 수정 → /editor/:id (#14 결합 완료)
-  // 삭제 → Sprint 4 #15 feat-article-delete-ux에서 결합
   const handleEdit = (): void => {
     navigate(`/editor/${article.id}`);
   };
   const handleDelete = (): void => {
-    // Sprint 4 #15
+    setDeleteError(null);
+    setConfirmOpen(true);
+  };
+  const handleConfirmDelete = async (): Promise<void> => {
+    setDeletePending(true);
+    setDeleteError(null);
+    try {
+      await deleteArticle(article.id);
+      setConfirmOpen(false);
+      navigate('/');
+    } catch (err) {
+      const normalized =
+        err instanceof NormalizedError
+          ? err
+          : new NormalizedError(0, '알 수 없는 오류가 발생했습니다');
+      setDeleteError(normalized);
+    } finally {
+      setDeletePending(false);
+    }
+  };
+  const handleCancelDelete = (): void => {
+    if (deletePending) return;
+    setConfirmOpen(false);
+    setDeleteError(null);
   };
 
   return (
@@ -124,6 +152,17 @@ export const Article = (): JSX.Element => {
       {(commentsState.status === 'success' || commentsState.status === 'empty') && commentsState.data && (
         <CommentList comments={commentsState.data} />
       )}
+      <ConfirmModal
+        open={confirmOpen}
+        title="글 삭제 확인"
+        message="이 글을 삭제하시겠습니까? 댓글도 함께 삭제됩니다."
+        confirmLabel="삭제"
+        pendingLabel="삭제 중…"
+        isPending={deletePending}
+        error={deleteError}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </article>
   );
 };
