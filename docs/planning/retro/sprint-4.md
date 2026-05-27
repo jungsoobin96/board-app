@@ -75,7 +75,7 @@ related:
 | A. Derived | RISK-03 deps 문구 정정 (`[data, status]` 권고 vs `[data]` 실제) | Sprint 5 follow-up (minor doc fix) |
 | A. Derived | Toast portal·queue·stacking (Sprint 5+) | Sprint 5 또는 Sprint 6 backlog |
 | A. Derived | ErrorBoundary Sentry 외부 송신 wiring | 별도 ADR + Sprint 6 후보 |
-| C. Bug | GitHub Actions sync-issue-labels.yml workflow 0 runs 디버그 | Sprint 5 첫 follow-up 우선순위 (P0) |
+| C. Bug | GitHub Actions sync-issue-labels.yml workflow 0 runs 디버그 | **Sprint 5 #47 → PR #49 머지** (merge_commit=67ae9cc, partial fix). H4 가설(`default_workflow_permissions: read`) Settings API로 `write` 적용 성공 + workflow YAML concurrency 보강 머지 완료, 그러나 **전역 trigger 여전히 0건** — Cache 0 bytes, public+enabled 상태인데 어떤 PR 이벤트에도 동작 안 함. **추가 follow-up 이슈 신설 후보** (GitHub UI Settings → Actions → General toggle 직접 확인 / 사용자 GitHub plan 옵션 검토 / Actions service-side disabled 가능성) |
 | A. Derived | gstack `/qa` LLM 환경 셋업 (자동 스크린샷·콘솔 grep) | Sprint 5 인프라 이슈 |
 
 ## 6. 우선순위·일정 보정
