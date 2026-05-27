@@ -84,11 +84,13 @@ screenshots: []
 
 | 시나리오 | 출처 | 결과 |
 | --- | --- | --- |
-| AC-01 sync-issue-labels.yml trigger ≥ 1 | acceptance.md §1 AC-01 | Manual verification (사람 검증 대기) |
-| AC-02 issue-pr-title-lint.yml trigger ≥ 1 + PR title PASS | acceptance.md §1 AC-02 | Manual verification |
-| AC-03 머지 후 자동 close + 라벨 제거 | acceptance.md §1 AC-03 | Manual verification |
+| AC-01 sync-issue-labels.yml trigger ≥ 1 | acceptance.md §1 AC-01 | **PASS** — PR #53 open 즉시 trigger (run id=26512977390, conclusion=success). 이슈 #51 라벨 `status:in-progress` → `status:in-review` 자동 전이 완료 |
+| AC-02 issue-pr-title-lint.yml trigger ≥ 1 + PR title PASS | acceptance.md §1 AC-02 | **PASS** — open 시 trigger (run id=26512977536, conclusion=failure) → PR title을 `bug(infra):` → `fix(infra):`로 정정 후 `pull_request: edited` 이벤트 재 trigger → conclusion=**success** (총 lint runs 2건) |
+| AC-03 머지 후 자동 close + 라벨 제거 | acceptance.md §1 AC-03 | ⏳ Manual verification (사용자 P14 머지 후 자연 관찰) |
 | 회귀-01 Sprint 5 후속 PR 자연 회귀 | acceptance.md §4 | Sprint 5 #52/#48 머지 후 자연 관찰 |
-| 비기능 R-OPS-AUTO-LABEL 운영 신뢰성 | acceptance.md §3 | 본 PR 머지 + 후속 PR 회귀 시 확정 |
+| 비기능 R-OPS-AUTO-LABEL 운영 신뢰성 | acceptance.md §3 | **검증 진행 중** — 본 PR open 단계에서 라벨 자동 전이 1회 실증 완료. 머지 + 후속 PR 회귀 시 추가 확정 |
+
+> **검증 임계 통과 — H6 자연 확정**: 5일간 workflow runs 전역 0건 → 본 PR #53 open 즉시 3건 trigger 발생. plan §1 BLOCKED 분기 미발동, P10 진행 정상.
 
 ## 4. FAIL 항목
 
@@ -102,6 +104,7 @@ screenshots: []
 | install.sh setup 완료 시 Actions 탭 URL 자동 출력 + `gh browse <owner>/<repo>/actions` 안내 | (Q1=No ✅) + (Q2=Yes ✅) + (Q3=Yes 별 자동화 ✅) → A.Derived | Sprint 6+ 후속 |
 | ADR 신설 — "Actions dispatcher 첫 활성화 cycle은 GitHub 정책 한계" 명문화 | (Q1=No ✅) + (Q2=Yes ✅) + (Q3=Yes 별 정책 영역 ✅) → A.Derived | Sprint 5 retro에서 결정 |
 | 다른 newProject들 Actions dispatcher 상태 일괄 점검 | (Q1=No ✅) + (Q2=Yes ✅) + (Q3=Yes 별 운영 영역 ✅) → A.Derived | Sprint 6+ 별도 운영 이슈 |
+| **branch prefix `bug/` vs PR/이슈 title prefix 정규식 `(feat\|fix\|chore\|docs\|test\|refactor)` 정책 불일치** — branch는 mode=feat/mod/bug/design 허용이지만 title-lint는 `bug` 미인정. 본 PR title 정정으로 발견. WBS 23 이슈 중 `bug(...)` prefix 다수 (이슈 lint 자체가 0 runs였으므로 미발견) | (Q1=No ✅) + (Q2=Yes ✅) + (Q3=Yes 별 정책 영역 ✅) → A.Derived | Sprint 5 후속 — `/flow-feature --mode=bug "이슈/PR title-lint 정규식에 bug\|mod 추가 또는 branch prefix 정책 수정 (#51 PR #53에서 발견)"` |
 
 ## 같은 PR 보정 필요
 
