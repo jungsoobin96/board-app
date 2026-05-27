@@ -26,6 +26,7 @@ related:
 | v0.5 | 2026-05-26 | jungsoobin96@users.noreply.github.com | Issue #10 PR — R-F-08 §1 단위 보강(matchRoute 헬퍼) + F-11 §1 skeleton 발현 fan-in (frontend 골격 도입). 정밀 반응형은 Sprint 5 #21 별 진행. |
 | v0.6 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #11 PR — R-N-02 §1 frontend layer 보강 fan-in (normalizeResponse + normalizeNetworkError + 9 method URL/method 정합). backend §1 errorHandler 단위(#2) + 통합(#9) 위에 FE client 단위 layer 추가. R-N-02 매트릭스 ✅·✅·✅ 그대로. |
 | v0.7 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #12 PR — R-F-01·R-F-04·F-01·F-02·F-08·F-11 §1 단위 fan-in (Home 페이지 — useArticles 5상태·AbortController·ArticleCard·Pagination·TagList RTL snapshot). MSW 통합 1건은 vitest jsdom 통합 미작동으로 skip + follow-up. R-N-06 a11y 시맨틱 + focus ring 발현. |
+| v0.8 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #13 PR — R-F-03·R-F-06·R-F-08·F-04·F-05(목록만) §1 단위 fan-in (Article 상세 + 댓글 목록 — useArticle/useComments 5상태·404 분기·CommentList RTL snapshot). 수정/삭제 버튼 mount만 (Sprint 4에서 핸들러 결합). |
 
 ## 1. 단위 테스트 카탈로그
 

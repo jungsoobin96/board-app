@@ -8,12 +8,12 @@
 - **Active Sprint**: Sprint 3 — FE 골격 + Home·Article (마감 2026-06-03)
 - **Sprint 1 진행**: 5/5 완료 — 100% COMPLETE
 - **Sprint 2 진행**: 4/4 완료 (#6·#7·#8·#9 모두 머지) — **Sprint 2 100% COMPLETE**
-- **Sprint 3 진행**: 2/4 머지 + 1 in-review (#10·#11 머지, #12 PR OPEN 본 PR) → 본 PR 머지 시 Sprint 3 3/4 (75%)
+- **Sprint 3 진행**: 3/4 머지 + 1 in-review (#10·#11·#12 머지, #13 PR OPEN 본 PR) → 본 PR 머지 시 **Sprint 3 100% COMPLETE**
 - **Gates**: A=PASS, B=PASS, C=PASS (2026-05-25)
 - **Branch protection**: 미적용 (Sprint 1 follow-up 권고)
 - **`pr-body-checkboxes` status check workflow**: 미등록 (Sprint 1 follow-up 권고)
-- **Currently in review**: PR #N (이슈 #12, Home 페이지 — useArticles/useTags + 3 components + MSW skip. ui_changed=true 2번째 발동)
-- **Sprint 3 Follow-up 이슈 후보** (#10·#11·#12 발견, 미등록): (1) Pretendard self-host / (2) frontend smoke 3 profile / (3) matchRoute trailing slash / (4) frontend/src/index.ts placeholder / (5) Component primitives (Sprint 4) / (6) vite-env.d.ts / (7) request() headers spread / (8) MSW 2.x + vitest jsdom 통합 디버깅 (#12) / (9) Home 에러 재시도 버튼 (#12 MINOR-01) / (10) Pagination ellipsis truncation (#12 MINOR-02)
+- **Currently in review**: PR #N (이슈 #13, Article 상세 + 댓글 목록. ui_changed=true 3번째 발동. **Sprint 3 마지막**)
+- **Sprint 3 Follow-up 이슈 후보** (#10·#11·#12·#13 발견, 미등록): (1) Pretendard self-host / (2) frontend smoke 3 profile / (3) matchRoute trailing slash / (4) frontend/src/index.ts placeholder / (5) Component primitives (Sprint 4) / (6) vite-env.d.ts / (7) request() headers spread / (8) MSW 2.x + vitest jsdom 통합 디버깅 / (9) Home 에러 재시도 버튼 / (10) Pagination ellipsis truncation / (11) formatDate 유틸 분리 (#13 MINOR-01) / (12) seed:dev idempotent 보장 (id 매번 증가)
 - **Sprint 2 Follow-up 이슈 후보** (미등록): (a) asyncHandler 유틸 분리 (3 controller 중복) / (b) tags integration 시드 Promise.all / (c) error-schema afterEach mock 단순화
 - **Sprint 1 Follow-up 이슈 후보** (미등록): (i) CI smoke job 신설 / (ii) pollReady fetch body 명시 cancel / (iii) engines `>=20.11.0` 정정 / (iv) GitHub Actions workflows 0 runs + sync-issue-labels.yml / (v) 13/02-catalog F-12 fan-in (Sprint 6)
 
@@ -21,7 +21,8 @@
 
 ### 2026-05-27 (Sprint 3)
 
-- **PR #N OPEN** — `feat(frontend): Home 페이지 (글 목록 + 사이드바 + 페이지네이션) (#12)`. Sprint 3 세 번째 이슈. Home placeholder → 실 구현 — useArticles/useTags hook (5상태 + AbortController signal forwarded) + ArticleCard/Pagination/TagList 컴포넌트 + URL source-of-truth (useSearchParams) + 768px stack 반응형 + MSW devDep. 10 commits / +1500+ lines. **ui_changed=true 2번째 발동** — 사용자 PowerShell pnpm install + frontend dev 부팅 + 5 path 브라우저 검증 + Home 스크린샷 첨부 완료(commit 940af5b). reviewer 1차 NEEDS-WORK (MAJOR-01 AbortController signal 미전달) → b12c756 + 563d583 보정 → 재검수 PASS, MAJOR 0/MINOR 2/INFO 5. 39/40 unit PASS + 1 skip (MSW 2.x + vitest jsdom 통합 미작동, follow-up logged). 13/02-catalog v0.7: F-01·F-02·F-08·F-11 §1 단위 fan-in.
+- **PR #N OPEN** — `feat(frontend): Article 상세 페이지 + 댓글 목록 (#13)`. Sprint 3 **마지막** 이슈. Article placeholder → 실 상세 — useArticle/useComments hook (5상태 + AbortController signal forwarded) + CommentList 컴포넌트 + 404 → NotFound 직 렌더 + invalid id 가드. 수정/삭제 버튼 mount만 (Sprint 4 별 PR에서 핸들러 결합). 4 commits / +420 lines. **ui_changed=true 3번째 발동** — 사용자 PowerShell test:unit 48/49 PASS + dev 부팅 + `/article/66` 본문 + `/article/1`·`/article/abc` NotFound 검증 + Article 스크린샷 첨부(commit 3e38307). reviewer verdict=PASS, MAJOR 0/MINOR 3/INFO 4. MINOR-02 (invalid id hook fetch skip) 같은 PR 보정 (b7fa398). MINOR-01·03은 follow-up. 13/02-catalog v0.8: R-F-03·R-F-06·F-04·F-05 §1 단위 fan-in. **본 PR 머지 시 Sprint 3 100% COMPLETE**.
+- **PR #40 머지** — `feat(frontend): Home 페이지 (#12)`. Sprint 3 세 번째. Home placeholder → 실 사용자 노출 페이지. **ui_changed=true 2번째 발동**. 사용자 직접 머지. merge_commit=85ab113.
 - **PR #39 머지** — `feat(frontend): api-client + shared types + 에러 정규화 (#11)`. Sprint 3 두 번째. shared DTO 4종 + 9 endpoint wrap + NormalizedError. 사용자 직접 머지. merge_commit=8340fa4. 25/25 unit PASS.
 - **PR #38 머지** — `feat(frontend): frontend 골격 + Vite + Tailwind + Router + 토큰 (#10)`. Sprint 3 첫 PR. ui_changed=true 첫 발동 — 사용자 PowerShell `pnpm install` + frontend dev + 5 path 브라우저 검증 + Home 스크린샷 첨부. 사용자 직접 머지. merge_commit=e87a781.
 
@@ -71,3 +72,4 @@
 | v0.7 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Sprint 2 100% COMPLETE + Sprint 3 진입 (#10 PR OPEN). #9 PR #37 머지 (merge_commit=56bf57f). frontend 골격 실 도입 — ui_changed=true 첫 발동. Sprint 3 follow-up 5건 명시. |
 | v0.8 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Sprint 3 1/4 머지 + #11 PR OPEN. #10 PR #38 머지 (merge_commit=e87a781). api-client + shared types 도입. reviewer 1차 NEEDS-WORK → 같은 PR 보정 → 재검수 PASS. Sprint 3 follow-up +2 (vite-env.d.ts / request headers spread). |
 | v0.9 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Sprint 3 2/4 머지 + #12 PR OPEN. #11 PR #39 머지 (merge_commit=8340fa4). Home 페이지 실 구현. reviewer 1차 NEEDS-WORK (MAJOR-01 signal) → 보정 → 재검수 PASS. 39/40 unit + 1 skip (MSW 2.x + vitest jsdom). Sprint 3 follow-up +3 (MSW 디버깅 / 재시도 버튼 / Pagination truncation). |
+| v0.10 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Sprint 3 3/4 머지 + #13 PR OPEN. #12 PR #40 머지 (merge_commit=85ab113). Article 상세 + 댓글 목록 실 구현. reviewer PASS (MAJOR 0). MINOR-02 같은 PR 보정. 48/49 unit + 1 skip. Sprint 3 follow-up +2 (formatDate 유틸 / seed:dev idempotent). 본 PR 머지 시 Sprint 3 100% 완결. |
