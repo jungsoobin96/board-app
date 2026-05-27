@@ -5,24 +5,26 @@
 ## Current Status
 
 - **Mode**: sprint
-- **Active Sprint**: Sprint 4 — FE 작성·수정·삭제 + 댓글 UI (마감 2026-06-08)
+- **Active Sprint**: 없음 (Sprint 4 종료 — Sprint 5 진입 대기, retro 권고)
 - **Sprint 1 진행**: 5/5 완료 — 100% COMPLETE
 - **Sprint 2 진행**: 4/4 완료 (#6·#7·#8·#9 모두 머지) — **Sprint 2 100% COMPLETE**
 - **Sprint 3 진행**: 4/4 완료 (#10·#11·#12·#13 모두 머지) — **Sprint 3 100% COMPLETE**
-- **Sprint 4 진행**: 2/4 머지 (#14 PR #42, #15 PR #43) + 1 PR OPEN (#16 본 PR) → 댓글 작성·삭제 UI (Sprint 4 세 번째 PR)
+- **Sprint 4 진행**: 4/4 완료 (#14 PR #42, #15 PR #43, #16 PR #44, #17 PR #45 모두 머지) — **Sprint 4 100% COMPLETE 🎉**
 - **Gates**: A=PASS, B=PASS, C=PASS (2026-05-25)
 - **Branch protection**: 미적용 (Sprint 1 follow-up 권고)
 - **`pr-body-checkboxes` status check workflow**: 미등록 (Sprint 1 follow-up 권고)
-- **Currently in review**: PR #N (이슈 #16, 댓글 작성·삭제 UI. ui_changed=true **6번째 발동**. Sprint 4 세 번째 PR. ConfirmModal 재사용 첫 케이스)
+- **Currently in review**: 없음
+- **Sprint 4 Follow-up 이슈 후보** (#14·#15·#16·#17 발견, 미등록): (A) pre-existing TS 에러 3건 정정 (`client.ts:18 import.meta.env`, `routes.tsx:39·46 string|undefined`) / (B) dev/stg/prod profile script 신설 (`dev:stg`/`dev:prod` 부족) / (C) RISK-03 deps 문구 정정 (`[data, status]` 권고 vs `[data]` 실제) / (D) Toast portal·queue·stacking (Sprint 5+) / (E) ErrorBoundary Sentry 외부 송신 (별도 ADR)
 - **Sprint 3 Follow-up 이슈 후보** (#10·#11·#12·#13 발견, 미등록): (1) Pretendard self-host / (2) frontend smoke 3 profile / (3) matchRoute trailing slash / (4) frontend/src/index.ts placeholder / (5) Component primitives (Sprint 4) / (6) vite-env.d.ts / (7) request() headers spread / (8) MSW 2.x + vitest jsdom 통합 디버깅 / (9) Home 에러 재시도 버튼 / (10) Pagination ellipsis truncation / (11) formatDate 유틸 분리 (#13 MINOR-01) / (12) seed:dev idempotent 보장 (id 매번 증가)
 - **Sprint 2 Follow-up 이슈 후보** (미등록): (a) asyncHandler 유틸 분리 (3 controller 중복) / (b) tags integration 시드 Promise.all / (c) error-schema afterEach mock 단순화
 - **Sprint 1 Follow-up 이슈 후보** (미등록): (i) CI smoke job 신설 / (ii) pollReady fetch body 명시 cancel / (iii) engines `>=20.11.0` 정정 / (iv) GitHub Actions workflows 0 runs + sync-issue-labels.yml / (v) 13/02-catalog F-12 fan-in (Sprint 6)
 
 ## History (시간 역순)
 
-### 2026-05-27 (Sprint 4 진입)
+### 2026-05-27 (Sprint 4 — 100% COMPLETE)
 
-- **PR #N OPEN** — `feat(frontend): 댓글 작성·삭제 UI (#16)`. Sprint 4 **세 번째 PR**. CommentForm 신규 (controlled body·author + M9 정합 인라인 검증 + body reset/author 유지 + NormalizedError alert). CommentList onDelete optional prop 추가. Article 댓글 흐름 결합 — commentsLocal useState mirror + 응답 후 prepend(낙관적 갱신 X) + ConfirmModal 재사용(#15) + confirmTarget discriminated union으로 글/댓글 모달 단일 mount 분기. 4 commits / +500 lines. **ui_changed=true 6번째 발동** — 사용자 검증 + 검증 에러/추가/삭제 스크린샷 3장. reviewer verdict=PASS, MAJOR 0/MINOR 2/INFO 2. MINOR-01 useId / MINOR-02 textarea sm:min-h 같은 PR 보정 (ef775cb). 단위 74 + 1 skip = 75 passed. ConfirmModal 재사용 검증 완료 — 같은 컴포넌트로 두 시나리오 잘 분기. 13/02-catalog v0.11: R-F-05·R-F-06 §1 FE 시나리오 fan-in.
+- **PR #45 머지** — `feat(frontend): NotFound + ErrorBoundary 폴리시 (#17)`. Sprint 4 **마지막 PR (4/4)**. Toast 컴포넌트 신규 (~50 LOC, success/error variant + auto-dismiss 3000ms + role="alert" + 닫기 버튼 + `message: string` 타입 강제로 R-N-02 스택 노출 차단 + useEffect cleanup으로 setTimeout 누수 차단). NotFound·ErrorBoundary 기존 컴포넌트 회귀 보호 단위 테스트 추가 (9 case — Toast 4 / NotFound 2 / ErrorBoundary 3 with 스택 미노출 검증). 기존 `App.tsx`·`routes.tsx`·`NotFound.tsx`·`ErrorBoundary.tsx` 수정 0건. 3 commits / +931 lines (코드 145 + 문서 786). **ui_changed=true 7번째 발동** (사용자 캡처 위임). reviewer verdict=PASS, MAJOR 0/MINOR 1 (doc-only). MINOR-F1 acceptance AC-04 색상 토큰 secondary-500 정정 같은 PR 보정 완료 (acceptance v0.3). 단위 83/84 + 1 skip = 83 passed (74 baseline + 9 신규). **Sprint 4 100% COMPLETE 🎉**. 사용자 직접 머지 merge_commit=11467cd. 13/02-catalog v0.12 fan-in: R-F-08 §1 FE (NotFound 회귀 보호) + R-N-02 §1 FE (ErrorBoundary 스택 미노출 + Toast 타입 강제 layer).
+- **PR #44 머지** — `feat(frontend): 댓글 작성·삭제 UI (#16)`. Sprint 4 **세 번째 PR**. CommentForm 신규 (controlled body·author + M9 정합 인라인 검증 + body reset/author 유지 + NormalizedError alert). CommentList onDelete optional prop 추가. Article 댓글 흐름 결합 — commentsLocal useState mirror + 응답 후 prepend(낙관적 갱신 X) + ConfirmModal 재사용(#15) + confirmTarget discriminated union으로 글/댓글 모달 단일 mount 분기. 4 commits / +500 lines. **ui_changed=true 6번째 발동** — 사용자 검증 + 검증 에러/추가/삭제 스크린샷 3장. reviewer verdict=PASS, MAJOR 0/MINOR 2/INFO 2. MINOR-01 useId / MINOR-02 textarea sm:min-h 같은 PR 보정 (ef775cb). 단위 74 + 1 skip = 75 passed. ConfirmModal 재사용 검증 완료 — 같은 컴포넌트로 두 시나리오 잘 분기. 사용자 직접 머지 merge_commit=a8800f4. 13/02-catalog v0.11: R-F-05·R-F-06 §1 FE 시나리오 fan-in.
 - **PR #43 머지** — `feat(frontend): 글 삭제 UX + cascade 시각 확인 (#15)`. Sprint 4 **두 번째 PR**. ConfirmModal 컴포넌트 신설 (~125 line, role="dialog" + aria-modal + useId + ESC + 최소 focus trap + controlled error pattern). Article handleConfirmDelete + cascade 시각. 6 commits / +400 lines. ui_changed=true 5번째 발동. reviewer PASS (MAJOR 0/MINOR 2/INFO 2). MINOR-1·2 같은 PR 보정 (ac9c798). 단위 66/67 + 1 skip. 사용자 직접 머지 merge_commit=a3d31b7.
 - **PR #42 머지** — `feat(frontend): Editor 페이지 (글 작성·수정) (#14)`. Sprint 4 **첫 PR**. Editor placeholder → 실 form (controlled 4 필드 + 인라인 검증 + createArticle/updateArticle + navigate). EditorForm 컴포넌트 신설 + Editor 신구 분기 + Article "수정" 버튼 결합. 4 commits / +600 lines. ui_changed=true 4번째 발동. reviewer PASS (MAJOR 0/MINOR 2/INFO 3). MINOR-01 같은 PR 보정 (9b62059). **Sprint 4 첫 LLM 직접 build+test PASS** baseline. 사용자 직접 머지 merge_commit=b432718.
 
