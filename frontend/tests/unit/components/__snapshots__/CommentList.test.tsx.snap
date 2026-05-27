@@ -30,12 +30,16 @@ exports[`CommentList > snapshot — 댓글 2건 1`] = `
           >
             min
           </span>
-          <time
-            class="text-neutral-700/70"
-            datetime="2026-01-15T10:30:00.000Z"
+          <span
+            class="flex items-center gap-2"
           >
-            2026-01-15
-          </time>
+            <time
+              class="text-neutral-700/70"
+              datetime="2026-01-15T10:30:00.000Z"
+            >
+              2026-01-15
+            </time>
+          </span>
         </div>
       </li>
       <li
@@ -56,12 +60,16 @@ exports[`CommentList > snapshot — 댓글 2건 1`] = `
           >
             hana
           </span>
-          <time
-            class="text-neutral-700/70"
-            datetime="2026-01-16T11:00:00.000Z"
+          <span
+            class="flex items-center gap-2"
           >
-            2026-01-16
-          </time>
+            <time
+              class="text-neutral-700/70"
+              datetime="2026-01-16T11:00:00.000Z"
+            >
+              2026-01-16
+            </time>
+          </span>
         </div>
       </li>
     </ul>

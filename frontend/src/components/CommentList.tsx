@@ -1,15 +1,16 @@
 /**
  * CommentList — 댓글 N건 목록. 빈 케이스 inline 메시지.
- * 작성/삭제 UI는 Sprint 4 feat-comment-create-delete-ui.
+ * onDelete prop 있으면 각 댓글에 "삭제" 버튼 노출 (#16에서 결합).
  * <section aria-label="댓글"> 시맨틱.
  */
 import type { Comment } from '@app/shared';
 
 interface Props {
   comments: Comment[];
+  onDelete?: (commentId: number) => void;
 }
 
-export const CommentList = ({ comments }: Props): JSX.Element => (
+export const CommentList = ({ comments, onDelete }: Props): JSX.Element => (
   <section aria-label="댓글" className="mt-8">
     <h2 className="text-xl font-semibold text-neutral-900 mb-4">
       댓글 ({comments.length})
@@ -28,9 +29,21 @@ export const CommentList = ({ comments }: Props): JSX.Element => (
             <p className="whitespace-pre-wrap mb-2">{comment.body}</p>
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold">{comment.author}</span>
-              <time dateTime={comment.createdAt} className="text-neutral-700/70">
-                {formatDate(comment.createdAt)}
-              </time>
+              <span className="flex items-center gap-2">
+                <time dateTime={comment.createdAt} className="text-neutral-700/70">
+                  {formatDate(comment.createdAt)}
+                </time>
+                {onDelete && (
+                  <button
+                    type="button"
+                    onClick={() => onDelete(comment.id)}
+                    aria-label={`댓글 #${comment.id} 삭제`}
+                    className="px-2 py-0.5 rounded border border-danger-500 text-danger-500 text-xs font-semibold hover:bg-danger-500 hover:text-neutral-0"
+                  >
+                    삭제
+                  </button>
+                )}
+              </span>
             </div>
           </li>
         ))}
