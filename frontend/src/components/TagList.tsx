@@ -35,7 +35,7 @@ export const TagList = ({ tags, selectedTag, onTagClick }: Props): JSX.Element =
             <li key={tag.name}>
               <button
                 type="button"
-                onClick={() => onTagClick(tag.name)}
+                onClick={() => onTagClick(active ? null : tag.name)}
                 aria-pressed={active}
                 className={`px-2 py-1 rounded text-xs hover:bg-secondary-500/20 ${
                   active
