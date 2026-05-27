@@ -27,6 +27,7 @@ related:
 | v0.6 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #11 PR — R-N-02 §1 frontend layer 보강 fan-in (normalizeResponse + normalizeNetworkError + 9 method URL/method 정합). backend §1 errorHandler 단위(#2) + 통합(#9) 위에 FE client 단위 layer 추가. R-N-02 매트릭스 ✅·✅·✅ 그대로. |
 | v0.7 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #12 PR — R-F-01·R-F-04·F-01·F-02·F-08·F-11 §1 단위 fan-in (Home 페이지 — useArticles 5상태·AbortController·ArticleCard·Pagination·TagList RTL snapshot). MSW 통합 1건은 vitest jsdom 통합 미작동으로 skip + follow-up. R-N-06 a11y 시맨틱 + focus ring 발현. |
 | v0.8 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #13 PR — R-F-03·R-F-06·R-F-08·F-04·F-05(목록만) §1 단위 fan-in (Article 상세 + 댓글 목록 — useArticle/useComments 5상태·404 분기·CommentList RTL snapshot). 수정/삭제 버튼 mount만 (Sprint 4에서 핸들러 결합). |
+| v0.9 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #14 PR — R-F-02·R-F-05·R-F-08·F-03·F-06·F-11 §1 단위 fan-in (Editor 페이지 — EditorForm controlled 4 필드·M9 정합 인라인 검증·submit 중복 방지·NormalizedError alert·initialValues 사전 로드 + Editor 신구 분기·404 NotFound·invalid id NotFound·loading skeleton). frontend layer 추가 — backend §1·§2 위에 FE form 검증 layer fan-in. Article "수정" 버튼 onClick 결합으로 F-06·F-11 매트릭스 ✅. |
 
 ## 1. 단위 테스트 카탈로그
 
@@ -45,10 +46,16 @@ related:
 
 출처: 04#R-F-02, 05#F-03, 05#F-06
 테스트 레벨: 단위
-대상 모듈: M7 BE-services (`normalizeTags`), M9 BE-validators (`validateArticleInput`)
+대상 모듈: M7 BE-services (`normalizeTags`), M9 BE-validators (`validateArticleInput`), M2 FE-pages (Editor 신구 분기), M3 FE-components (EditorForm)
 - Happy: tagList `["JS"," ts ","js"]` → 정규화 결과 `["js","ts"]` (trim·lower·중복 제거)
 - Failure: title 빈 값 → ValidationError + code `VAL_TITLE_REQUIRED`
 - Failure: title > 200자 → ValidationError + code `VAL_TITLE_TOO_LONG`
+- FE Happy: EditorForm controlled 4 필드 (#14) — 입력 시 state 갱신·initialValues 적용
+- FE Happy: 정상 submit → onSubmit 호출 with trimmed payload + tagList 정규화 (frontend도 M9 정합 사전 정규화)
+- FE Happy: Editor 신규 모드 `/editor` — useArticle 미동작 + 빈 form / 수정 모드 `/editor/:id` — useArticle 사전 로드 + initialValues 채움
+- FE Failure: 빈 title submit (#14) → 인라인 에러 "제목은 필수입니다" + onSubmit 미호출 + 입력값 보존
+- FE Failure: submit NormalizedError → 상단 alert 노출 + 입력값 보존
+- FE Failure: Editor 수정 모드 + 404 → NotFound 직 렌더 (URL 유지) / invalid id (`/editor/abc`) → NotFound
 
 ### R-F-03: 글 상세·삭제 — 단위
 
@@ -70,9 +77,12 @@ related:
 
 출처: 04#R-F-05, 05#F-03, 05#F-05, 05#F-06
 테스트 레벨: 단위
-대상 모듈: M9 validators (validateArticleInput, validateCommentInput, parseListQuery, parsePathId)
+대상 모듈: M9 validators (validateArticleInput, validateCommentInput, parseListQuery, parsePathId) + M3 FE EditorForm `validate()` 사전 검증
 - Happy: 정상 입력 통과
 - Failure: title 빈 값 / body 빈 값 / page=-1 / id="abc" 등 4종 case별 ValidationError + code 검증
+- FE Happy (#14): EditorForm `validate()` 정상 입력 → fieldErrors 0개 → onSubmit 호출
+- FE Failure (#14): title 빈 값 → "제목은 필수입니다" / title > 200자 → "제목은 200자 이하여야 합니다" / body 빈 값 → "본문은 필수입니다" / author 빈 값 → "작성자는 필수입니다" / author > 50자 → "작성자는 50자 이하여야 합니다" (09 §3 한국어 메시지 backend와 일관)
+- FE Happy (#14): `parseTagList(" JavaScript, intro,  JavaScript ,  ")` → `["javascript", "intro"]` (trim·lower·중복·빈 토큰 제거)
 
 ### R-F-06: 댓글 API — 단위
 
