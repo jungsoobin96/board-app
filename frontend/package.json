@@ -2,14 +2,36 @@
   "name": "@app/frontend",
   "version": "0.0.0",
   "private": true,
-  "description": "Vite + React + Tailwind frontend (모듈 placeholder, 이슈 #10에서 실 도입)",
+  "description": "Vite + React + Tailwind frontend (이슈 #10에서 실 도입)",
   "type": "module",
   "scripts": {
-    "build": "tsc -b",
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --port 4173",
+    "preview:stg": "vite preview --port 4173",
+    "preview:prod": "vite preview --port 4173",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
-    "dev": "echo 'dev script placeholder — 이슈 #10에서 vite 도입 예정'"
+    "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run"
   },
   "dependencies": {
-    "@app/shared": "workspace:*"
+    "@app/shared": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@tailwindcss/forms": "^0.5.9",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "jsdom": "^25.0.1",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.14",
+    "vite": "^5.4.10",
+    "vitest": "^2.1.4"
   }
 }

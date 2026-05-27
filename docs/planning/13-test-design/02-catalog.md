@@ -23,6 +23,7 @@ related:
 | v0.2 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #6 PR — F-05 (댓글 작성·삭제) §1 단위 + §2 통합 fan-in. ADR-0035 WARN 1건 해소 (잔여 F-08·F-12는 #7·Sprint 6 별 진행). |
 | v0.3 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #7 PR — F-02 (태그 필터) + F-08 (인기 태그 사이드바) §1·§2 fan-in. ADR-0035 WARN 2건 추가 해소 (잔여 F-12만 Sprint 6 별 진행). |
 | v0.4 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #9 PR — R-N-02 §2 통합 보강 fan-in (전 9 endpoint × ~2 에러 + notFoundHandler + 의도 throw 500). 단위 layer와 별 axis 명시. |
+| v0.5 | 2026-05-26 | jungsoobin96@users.noreply.github.com | Issue #10 PR — R-F-08 §1 단위 보강(matchRoute 헬퍼) + F-11 §1 skeleton 발현 fan-in (frontend 골격 도입). 정밀 반응형은 Sprint 5 #21 별 진행. |
 
 ## 1. 단위 테스트 카탈로그
 
@@ -109,6 +110,26 @@ related:
 대상 모듈: M3 components (snapshot)
 - Happy: `<ArticleCard>` snapshot 1종 (PR diff 시 변화 감지)
 - Failure: snapshot mismatch → CI fail
+
+### R-F-08: 라우팅 — 단위 (보강)
+
+출처: 04#R-F-08, 05#F-11, M1 FE-router
+테스트 레벨: 단위
+대상 모듈: M1 FE-router `matchRoute(pathname)` 헬퍼
+- Happy: 5 path (`/`, `/article/:id`, `/editor`, `/editor/:id`) → route name + params
+- Happy: slug 형식 (`/article/abc-with-dashes`) → params.id 유지
+- Failure: `/nonexistent` → 'notfound'
+- 발현: Sprint 3 / Issue #10 (PR feat/frontend-skeleton-issue-10)
+
+### F-11: 반응형 UI — 단위 (skeleton 발현)
+
+출처: 05#F-11, 04#R-N-06
+테스트 레벨: 단위
+대상 모듈: M1 router + M2 pages 4종 + M3 Layout·ErrorBoundary placeholder
+- Happy: 5 path 모두 page placeholder 노출
+- Happy: 10 §3 design token 4종 CSS Variables → Tailwind theme.extend 매핑 (`bg-primary-500` → `#3b82f6`)
+- 사용자 브라우저 검증: 5 path 진입 + Home `bg-primary-500` 시각 확인 (스크린샷 첨부)
+- 발현: Sprint 3 / Issue #10. 정밀 반응형 검증은 Sprint 5 #21
 
 ### F-05: 댓글 작성·삭제 — 단위
 

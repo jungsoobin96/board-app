@@ -5,9 +5,10 @@
 ## Current Status
 
 - **Mode**: sprint
-- **Active Sprint**: Sprint 2 — 댓글 + 태그 API + 통합 회귀 (마감 2026-05-30)
-- **Sprint 1 진행**: 5/5 완료 (#1·#2·#3·#4·#5 모두 머지) — Sprint 1 100% COMPLETE
-- **Sprint 2 진행**: 3/4 머지 + 1 in-review (#6·#7·#8 머지, #9 PR OPEN 본 PR) → 본 PR 머지 시 **Sprint 2 100% COMPLETE**
+- **Active Sprint**: Sprint 3 — FE 골격 + Home·Article (마감 2026-06-03)
+- **Sprint 1 진행**: 5/5 완료 — 100% COMPLETE
+- **Sprint 2 진행**: 4/4 완료 (#6·#7·#8·#9 모두 머지) — **Sprint 2 100% COMPLETE**
+- **Sprint 3 진행**: 1 in-review (#10 PR OPEN 본 PR) → 본 PR 머지 시 Sprint 3 1/4 (25%)
 - **Gates**: A=PASS, B=PASS, C=PASS (2026-05-25)
 - **Branch protection**: 미적용 (Sprint 1 follow-up 권고)
 - **`pr-body-checkboxes` status check workflow**: 미등록 (Sprint 1 follow-up 권고)
@@ -17,9 +18,13 @@
 
 ## History (시간 역순)
 
-### 2026-05-26 (Sprint 2 진입)
+### 2026-05-27 (Sprint 3 진입)
 
-- **PR #N OPEN** — `test(backend): 에러 schema 통일 통합 회귀 (#9)`. Sprint 2 마지막 이슈. error-schema.integration.test.ts 신설 — 9 endpoint × ~2 에러 + notFoundHandler + 의도 throw 500 = 12 it 케이스. expectErrorSchema 헬퍼로 `{error:string}` + !stack + !code 강제. vi.mock(tag.service) throw 주입 + console.error spy로 [SRV_INTERNAL] stderr 검증. 1 commit / +179 lines (test only, src 0). reviewer agent verdict=PASS, MAJOR 0/MINOR 2/INFO 3. R-N-02 매트릭스 완결 (단위 #2 + 각 통합 부분 + 본 PR 일괄 통합 회귀). 본 PR 머지 시 **Sprint 2 100% COMPLETE**.
+- **PR #N OPEN** — `feat(frontend): frontend 골격 + Vite + Tailwind + Router + 토큰 (#10)`. Sprint 3 첫 PR. frontend 빈 워크스페이스에 Vite + React 18 + react-router-dom 6 + Tailwind 3 + design token 4종 실 도입. 5 commits + 1 user lock commit = 6 commits / +515 lines (frontend src 15 파일 + 단위 test + env·LOCAL.md·12-scaffolding 동기). **ui_changed=true 첫 발동** — AI 게이트 5번째 축(브라우저 골든패스 + stylesheet) 정식 발동. 사용자 PowerShell `pnpm install` + frontend dev 부팅 + 5 path 브라우저 검증 + Home 스크린샷 첨부 완료(commit 347166e). reviewer agent verdict=PASS, MAJOR 0/MINOR 3/INFO 5. 13/02-catalog v0.5: R-F-08 §1 보강 + F-11 §1 skeleton 발현 fan-in.
+
+### 2026-05-26 (Sprint 2)
+
+- **PR #37 머지** — `test(backend): 에러 schema 통일 통합 회귀 (#9)`. Sprint 2 마지막 이슈. error-schema.integration.test.ts 신설 — 12 it 케이스. R-N-02 매트릭스 완결. 사용자 직접 머지. merge_commit=56bf57f. **Sprint 2 100% COMPLETE**.
 - **PR #36 머지** — `test(backend): cascade 무결성 통합 회귀 (#8)`. Sprint 2 세 번째 이슈. cascade rollback 시나리오 1건 추가. R-F-07 매트릭스 완결. 사용자 직접 머지. merge_commit=80024aa.
 - **PR #35 머지** — `feat(backend): 태그 API + 정렬·상한 + 통합 (#7)`. Sprint 2 두 번째 이슈. 09 §3 GET /api/tags 1 endpoint 신설 — `routes/tags.ts` + `controllers/tags.controller.ts` + `services/tag.service.ts` + `repositories/tag.repo.ts` 신설. **09 API spec 9/9 endpoint 완결**. 6 commits / +1111 -6. Prisma `_count.articleTags` orderBy + take 20 native. articles·comments 패턴 답습. AI 게이트 3·4·5(N/A) PASS + 1·2·6 사용자 위임. reviewer agent verdict=PASS, MAJOR 0/MINOR 2/INFO 3. 13/02-catalog v0.3: F-02·F-08 §1·§2 fan-in. 사용자 직접 머지 (ADR-0046 §3). merge_commit=1dbb642.
 - **PR #34 머지** — `feat(backend): 댓글 API (CRD, 수정 없음) + 통합 (#6)`. Sprint 2 첫 이슈. backend HTTP layer 3 endpoint 신설 (GET 200 / POST 201 / DELETE 204). 7 commits / +553 -0. 09 API spec 8/9 충족. articles(#4) 패턴 답습 — `Router({ mergeParams: true })` + article.repo.findById 재사용 + asyncHandler 패턴. AI 게이트 3·4·5(N/A)축 PASS + 1·2·6축 사용자 P14 위임. reviewer agent verdict=PASS, MAJOR 0건. 13/02-catalog v0.2: F-05 fan-in. 15-risk v0.3: RISK-16 신설 (mergeParams 누락 회귀 패턴). 사용자 직접 머지 (ADR-0046 §3 정상). merge_commit=e49e20a.
@@ -60,3 +65,4 @@
 | v0.4 | 2026-05-26 | woosung.ahn@bespinglobal.com | Sprint 2 1/4 머지 + #7 PR OPEN 갱신. #6 PR #34 머지 (사용자 직접). 09 API spec 9/9 완결. Sprint 2 follow-up +1 (tags integration 시드 Promise.all 최적화). |
 | v0.5 | 2026-05-26 | woosung.ahn@bespinglobal.com | Sprint 2 2/4 머지 + #8 PR OPEN 갱신. #7 PR #35 머지 (사용자 직접, merge_commit=1dbb642). R-F-07 매트릭스 완결 (rollback 시나리오 추가). |
 | v0.6 | 2026-05-26 | woosung.ahn@bespinglobal.com | Sprint 2 3/4 머지 + #9 PR OPEN 갱신. #8 PR #36 머지 (사용자 직접, merge_commit=80024aa). R-N-02 매트릭스 완결 (12 통합 it 추가). Sprint 2 마지막 이슈 — 머지 시 100% 완결. |
+| v0.7 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Sprint 2 100% COMPLETE + Sprint 3 진입 (#10 PR OPEN). #9 PR #37 머지 (merge_commit=56bf57f). frontend 골격 실 도입 — ui_changed=true 첫 발동. Sprint 3 follow-up 5건 명시. |

@@ -13,6 +13,7 @@
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 — flow-design Phase 2/4에서 12-scaffolding/typescript.md §7과 동시 작성. Conduit Lite (TS + React/Express/Prisma/SQLite, pnpm workspaces monorepo). |
 | v0.2 | 2026-05-25 | woosung.ahn@bespinglobal.com | Issue #3 — `seed:dev` script 정식 도입(`pnpm --filter @app/backend seed:dev`) + §3.1 dev profile에 DB 초기화 reminder 1줄 추가 (ADR-0040 동기). |
 | v0.3 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #5 — 3 profile 부팅 smoke 자동화 (`pnpm smoke:3profiles`) + §2 5)에 stg/prod prisma push 안내 + §3.1/3.2/3.3 각 끝에 smoke 검증 1줄 + §4 부팅 자산 표에 smoke 행 추가 (ADR-0037 v1.1 6번째 축 정식 충족). |
+| v0.4 | 2026-05-26 | jungsoobin96@users.noreply.github.com | Issue #10 — frontend 골격 실 도입 (Vite + React + Tailwind + Router). `.env.{dev,stg,prod}.example`에 `VITE_API_URL` + `VITE_APP_TITLE` 추가 (12 §6 정합). §3 frontend dev/preview 명령은 이미 명시되어 있어 본 PR로 *실 발현*. §5.7 Tailwind 트러블슈팅 항목 이미 활용 가능. **사용자 PowerShell `pnpm install` 후 lock commit 필수**. |
 
 ---
 
