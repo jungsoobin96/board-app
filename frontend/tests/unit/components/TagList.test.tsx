@@ -38,4 +38,18 @@ describe('TagList', () => {
     render(<TagList tags={[]} selectedTag={null} onTagClick={vi.fn()} />);
     expect(screen.getByText('태그가 아직 없습니다.')).toBeInTheDocument();
   });
+
+  it('active 태그 재클릭 시 onTagClick(null) 호출 (해제, #18)', () => {
+    const onTagClick = vi.fn();
+    render(<TagList tags={sampleTags} selectedTag="javascript" onTagClick={onTagClick} />);
+    screen.getByRole('button', { name: /javascript/ }).click();
+    expect(onTagClick).toHaveBeenCalledWith(null);
+  });
+
+  it('비-active 태그 클릭 시 onTagClick(name) 호출 (선택, #18)', () => {
+    const onTagClick = vi.fn();
+    render(<TagList tags={sampleTags} selectedTag="javascript" onTagClick={onTagClick} />);
+    screen.getByRole('button', { name: /typescript/ }).click();
+    expect(onTagClick).toHaveBeenCalledWith('typescript');
+  });
 });
