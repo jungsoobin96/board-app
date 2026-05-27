@@ -30,6 +30,7 @@ related:
 | v0.9 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #14 PR — R-F-02·R-F-05·R-F-08·F-03·F-06·F-11 §1 단위 fan-in (Editor 페이지 — EditorForm controlled 4 필드·M9 정합 인라인 검증·submit 중복 방지·NormalizedError alert·initialValues 사전 로드 + Editor 신구 분기·404 NotFound·invalid id NotFound·loading skeleton). frontend layer 추가 — backend §1·§2 위에 FE form 검증 layer fan-in. Article "수정" 버튼 onClick 결합으로 F-06·F-11 매트릭스 ✅. |
 | v0.10 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #15 PR — R-F-03·R-F-07 §1 단위 FE 시나리오 추가 (Article 삭제 흐름 — ConfirmModal RTL 4건 + Article RTL 3건). 삭제 모달 노출·확정 deleteArticle+navigate('/')·실패 alert+모달유지·pending race 차단·cascade 시각(navigate 후 미노출 + direct URL 재진입 → NotFound). R-F-03·R-F-07 매트릭스 그대로(✅·✅·✅). |
 | v0.11 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #16 PR — R-F-05·R-F-06 §1 단위 FE 시나리오 추가 (댓글 작성/삭제 UI — CommentForm RTL 4건 + CommentList onDelete 1건 + Article 댓글 흐름 RTL 3건). CommentForm controlled body·author + M9 trim 0자 차단 + body reset·author 유지 + NormalizedError alert + 응답 후 추가 prepend + ConfirmModal 재사용(#15) + confirmTarget discriminated union으로 글/댓글 모달 단일 mount 분기. R-F-05·R-F-06 매트릭스 그대로(✅·✅·✅). |
+| v0.12 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #17 PR — R-F-08·R-N-02 §1 단위 FE 회귀 보호 시나리오 추가 (NotFound + ErrorBoundary 폴리시 — Toast RTL 4건 + NotFound RTL 2건 + ErrorBoundary RTL 3건). Toast success/error variant + auto-dismiss 3000ms (vi fake timer) + durationMs=null 비활성화 + 닫기 onDismiss. NotFound heading + Link href="/". ErrorBoundary 정상 children + throwing → role=alert + 한국어 fallback + Error.message·stack 미노출(queryByText null) R-N-02 강제. R-F-08·R-N-02 매트릭스 그대로(✅·✅·✅ / ✅·✅·✅). |
 
 ## 1. 단위 테스트 카탈로그
 
@@ -170,6 +171,30 @@ related:
 - Failure: body parse fail → NormalizedError(status, '서버 응답을 처리할 수 없습니다')
 - Failure: offline (fetch reject) → NormalizedError(0, '네트워크 오류')
 - 발현: Sprint 3 / Issue #11 (PR feat/frontend-api-client-issue-11). backend errorHandler 단위(#2) + 통합(#9) 양축 위에 frontend client 단위 layer 추가
+
+### R-F-08: NotFound 폴리시 — 단위 (#17 회귀 보호)
+
+출처: 04#R-F-08, M2 FE-pages NotFound, M1 FE-router catch-all
+테스트 레벨: 단위
+대상 모듈: M2 FE-pages `NotFound` (MemoryRouter wrap)
+- Happy: heading "찾을 수 없는 페이지" 노출 + `aria-labelledby="notfound-heading"` 일치
+- Happy: Link `to="/"` 렌더 + "홈으로" 텍스트
+- 발현: Sprint 4 / Issue #17 (PR #45 feat/notfound-and-error-boundary-issue-17). M1 router `path="*"` catch-all + Article 페이지 404 분기에서 사용. matchRoute 보강(#10) 위에 NotFound 컴포넌트 자체 회귀 보호 layer 추가
+
+### R-N-02: ErrorBoundary 스택 미노출 + Toast 타입 강제 — 단위 (#17 FE 보안 layer 보강)
+
+출처: 04#R-N-02, M3 FE-components ErrorBoundary·Toast
+테스트 레벨: 단위
+대상 모듈: M3 FE-components `ErrorBoundary` (class component) + `Toast` (success/error variant)
+- Happy: ErrorBoundary 정상 자식 그대로 통과 (fallback 미노출, queryByRole('alert') null)
+- Failure: 자식 throw → role="alert" + heading "오류가 발생했습니다" + "새로고침해 주세요" 한국어 fallback
+- Failure: throw Error('내부 SQL 에러: SELECT * FROM users WHERE id=42') → fallback DOM에 message·stack 미노출 (queryByText(/내부 SQL/), queryByText(/SELECT/), queryByText(/at Throwing/) 모두 null) — R-N-02 보안 강제
+- Happy: Toast variant=success → `bg-secondary-500` (10 §3 토큰에 success-500 미정의로 secondary green 재사용) + role="alert" + message 노출
+- Happy: Toast variant=error → `bg-danger-500` + 닫기 클릭 → onDismiss 1회
+- Happy: Toast durationMs=3000 + vi.useFakeTimers + advanceTimersByTime(3000) → onDismiss 1회 자동 호출
+- Happy: Toast durationMs=null → 타이머 등록 X, 10000ms 경과해도 onDismiss 미호출
+- Type-level: Toast `message: string` 타입으로 Error 객체·stack 직 전달 차단 — 호출자가 NormalizedError.message 추출 책임
+- 발현: Sprint 4 / Issue #17 (PR #45). backend errorHandler 단위(#2)·통합(#9) + FE client(#11) 위에 FE ErrorBoundary 보안 layer + Toast 타입 강제 layer 추가. R-N-02 매트릭스 ✅·✅·✅ 그대로 (보안 강도 보강).
 
 ### F-05: 댓글 작성·삭제 — 단위
 
