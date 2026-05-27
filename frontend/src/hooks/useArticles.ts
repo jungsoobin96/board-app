@@ -30,7 +30,10 @@ export function useArticles(args: UseArticlesArgs): UseArticlesState {
     const controller = new AbortController();
     setState({ status: 'loading', data: null, error: null });
 
-    listArticles({ page: args.page, limit: args.limit, tag: args.tag ?? undefined })
+    listArticles(
+      { page: args.page, limit: args.limit, tag: args.tag ?? undefined },
+      { signal: controller.signal },
+    )
       .then((result) => {
         if (controller.signal.aborted) return;
         if (result.articles.length === 0) {

@@ -17,6 +17,10 @@ import { normalizeResponse, normalizeNetworkError } from './normalizeError';
 
 const BASE_URL = (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:3000/api';
 
+export interface RequestOptions {
+  signal?: AbortSignal;
+}
+
 async function request<T>(input: string, init?: RequestInit): Promise<T> {
   let res: Response;
   try {
@@ -42,52 +46,83 @@ export interface ListArticlesArgs {
   tag?: string;
 }
 
-export async function listArticles(args: ListArticlesArgs = {}): Promise<ListResult<Article>> {
+export async function listArticles(
+  args: ListArticlesArgs = {},
+  options: RequestOptions = {},
+): Promise<ListResult<Article>> {
   const params = new URLSearchParams();
   if (args.page !== undefined) params.set('page', String(args.page));
   if (args.limit !== undefined) params.set('limit', String(args.limit));
   if (args.tag !== undefined) params.set('tag', args.tag);
   const qs = params.toString();
-  return request<ListResult<Article>>(`/articles${qs ? `?${qs}` : ''}`);
+  return request<ListResult<Article>>(`/articles${qs ? `?${qs}` : ''}`, {
+    signal: options.signal,
+  });
 }
 
-export async function getArticle(id: number): Promise<Article> {
-  return request<Article>(`/articles/${id}`);
+export async function getArticle(id: number, options: RequestOptions = {}): Promise<Article> {
+  return request<Article>(`/articles/${id}`, { signal: options.signal });
 }
 
-export async function createArticle(input: ArticleInput): Promise<Article> {
+export async function createArticle(
+  input: ArticleInput,
+  options: RequestOptions = {},
+): Promise<Article> {
   return request<Article>('/articles', {
     method: 'POST',
     body: JSON.stringify(input),
+    signal: options.signal,
   });
 }
 
-export async function updateArticle(id: number, input: ArticleInput): Promise<Article> {
+export async function updateArticle(
+  id: number,
+  input: ArticleInput,
+  options: RequestOptions = {},
+): Promise<Article> {
   return request<Article>(`/articles/${id}`, {
     method: 'PUT',
     body: JSON.stringify(input),
+    signal: options.signal,
   });
 }
 
-export async function deleteArticle(id: number): Promise<void> {
-  await request<void>(`/articles/${id}`, { method: 'DELETE' });
+export async function deleteArticle(id: number, options: RequestOptions = {}): Promise<void> {
+  await request<void>(`/articles/${id}`, { method: 'DELETE', signal: options.signal });
 }
 
-export async function listComments(articleId: number): Promise<CommentListResult> {
-  return request<CommentListResult>(`/articles/${articleId}/comments`);
+export async function listComments(
+  articleId: number,
+  options: RequestOptions = {},
+): Promise<CommentListResult> {
+  return request<CommentListResult>(`/articles/${articleId}/comments`, {
+    signal: options.signal,
+  });
 }
 
-export async function createComment(articleId: number, input: CommentInput): Promise<Comment> {
+export async function createComment(
+  articleId: number,
+  input: CommentInput,
+  options: RequestOptions = {},
+): Promise<Comment> {
   return request<Comment>(`/articles/${articleId}/comments`, {
     method: 'POST',
     body: JSON.stringify(input),
+    signal: options.signal,
   });
 }
 
-export async function deleteComment(articleId: number, commentId: number): Promise<void> {
-  await request<void>(`/articles/${articleId}/comments/${commentId}`, { method: 'DELETE' });
+export async function deleteComment(
+  articleId: number,
+  commentId: number,
+  options: RequestOptions = {},
+): Promise<void> {
+  await request<void>(`/articles/${articleId}/comments/${commentId}`, {
+    method: 'DELETE',
+    signal: options.signal,
+  });
 }
 
-export async function listTags(): Promise<TagListResult> {
-  return request<TagListResult>('/tags');
+export async function listTags(options: RequestOptions = {}): Promise<TagListResult> {
+  return request<TagListResult>('/tags', { signal: options.signal });
 }

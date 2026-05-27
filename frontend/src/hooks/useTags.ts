@@ -23,7 +23,7 @@ export function useTags(): UseTagsState {
     const controller = new AbortController();
     setState({ status: 'loading', data: null, error: null });
 
-    listTags()
+    listTags({ signal: controller.signal })
       .then((result) => {
         if (controller.signal.aborted) return;
         if (result.tags.length === 0) {

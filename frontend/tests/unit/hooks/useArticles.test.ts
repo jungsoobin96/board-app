@@ -55,7 +55,7 @@ describe('useArticles', () => {
     expect(result.current.error?.message).toBe('잘못된 페이지/리미트 값입니다');
   });
 
-  it('AbortController — unmount 시 abort 호출 (메모리 leak 회피)', () => {
+  it('AbortController — unmount 시 abort 호출 + signal이 fetch에 전달됨 (실 요청 취소)', () => {
     vi.mocked(fetch).mockImplementation(
       () =>
         new Promise(() => {
@@ -64,6 +64,13 @@ describe('useArticles', () => {
     );
     const abortSpy = vi.spyOn(AbortController.prototype, 'abort');
     const { unmount } = renderHook(() => useArticles({ page: 1, limit: 10, tag: null }));
+
+    // fetch가 호출됐고 signal 인자가 AbortSignal 인스턴스로 전달됐는지 검증 (MAJOR-01 보정)
+    expect(fetch).toHaveBeenCalled();
+    const lastCall = vi.mocked(fetch).mock.calls[0];
+    const initArg = lastCall[1] as RequestInit | undefined;
+    expect(initArg?.signal).toBeInstanceOf(AbortSignal);
+
     unmount();
     expect(abortSpy).toHaveBeenCalled();
     abortSpy.mockRestore();
