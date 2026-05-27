@@ -9,7 +9,7 @@
  * 호출자 책임: open/isPending/error state + onConfirm/onCancel 핸들러.
  * 본 컴포넌트는 try/catch 안 함 (controlled — 호출자가 상태 관리).
  */
-import { useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { useEffect, useId, useRef, type KeyboardEvent as ReactKeyboardEvent } from 'react';
 import type { NormalizedError } from '@app/shared';
 
 export interface ConfirmModalProps {
@@ -37,8 +37,14 @@ export const ConfirmModal = ({
   onConfirm,
   onCancel,
 }: ConfirmModalProps): JSX.Element | null => {
+  const titleId = useId();
   const confirmRef = useRef<HTMLButtonElement>(null);
   const cancelRef = useRef<HTMLButtonElement>(null);
+  // onCancel을 ref로 안정화 — 호출자가 inline arrow 사용해도 useEffect listener 재등록 안 함.
+  const onCancelRef = useRef(onCancel);
+  useEffect(() => {
+    onCancelRef.current = onCancel;
+  }, [onCancel]);
 
   useEffect(() => {
     if (!open) return;
@@ -50,12 +56,12 @@ export const ConfirmModal = ({
     const onKeydown = (e: KeyboardEvent): void => {
       if (e.key === 'Escape' && !isPending) {
         e.preventDefault();
-        onCancel();
+        onCancelRef.current();
       }
     };
     window.addEventListener('keydown', onKeydown);
     return () => window.removeEventListener('keydown', onKeydown);
-  }, [open, isPending, onCancel]);
+  }, [open, isPending]);
 
   if (!open) return null;
 
@@ -79,12 +85,12 @@ export const ConfirmModal = ({
     <div
       role="dialog"
       aria-modal="true"
-      aria-labelledby="confirm-modal-title"
+      aria-labelledby={titleId}
       onKeyDown={handleTabKey}
       className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/50 px-4"
     >
       <div className="bg-neutral-0 rounded-lg shadow-lg max-w-md w-full p-6">
-        <h2 id="confirm-modal-title" className="text-lg font-bold text-neutral-900 mb-2">
+        <h2 id={titleId} className="text-lg font-bold text-neutral-900 mb-2">
           {title}
         </h2>
         <p className="text-sm text-neutral-700 mb-4">{message}</p>
