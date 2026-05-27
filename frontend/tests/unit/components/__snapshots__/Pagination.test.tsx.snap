@@ -1,0 +1,44 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Pagination > snapshot — total=25 limit=10 page=2 1`] = `
+<DocumentFragment>
+  <nav
+    aria-label="페이지네이션"
+    class="flex items-center justify-center gap-2 mt-6"
+  >
+    <button
+      aria-label="이전 페이지"
+      class="px-3 py-1 rounded border border-neutral-300 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:border-primary-500"
+      type="button"
+    >
+      &lt;
+    </button>
+    <button
+      class="px-3 py-1 rounded text-sm font-semibold border border-neutral-300 hover:border-primary-500"
+      type="button"
+    >
+      1
+    </button>
+    <button
+      aria-current="page"
+      class="px-3 py-1 rounded text-sm font-semibold bg-primary-500 text-neutral-0"
+      type="button"
+    >
+      2
+    </button>
+    <button
+      class="px-3 py-1 rounded text-sm font-semibold border border-neutral-300 hover:border-primary-500"
+      type="button"
+    >
+      3
+    </button>
+    <button
+      aria-label="다음 페이지"
+      class="px-3 py-1 rounded border border-neutral-300 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:border-primary-500"
+      type="button"
+    >
+      &gt;
+    </button>
+  </nav>
+</DocumentFragment>
+`;

@@ -1,0 +1,48 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TagList > snapshot — 2 tags, no selection 1`] = `
+<DocumentFragment>
+  <aside
+    aria-label="인기 태그"
+    class="border border-neutral-300 rounded p-4"
+  >
+    <h2
+      class="text-base font-semibold text-neutral-900 mb-3"
+    >
+      인기 태그
+    </h2>
+    <ul
+      class="flex flex-wrap gap-2"
+    >
+      <li>
+        <button
+          aria-pressed="false"
+          class="px-2 py-1 rounded text-xs hover:bg-secondary-500/20 bg-secondary-500/10 text-secondary-700"
+          type="button"
+        >
+          javascript
+          <span
+            class="ml-1 text-neutral-700/70"
+          >
+            (12)
+          </span>
+        </button>
+      </li>
+      <li>
+        <button
+          aria-pressed="false"
+          class="px-2 py-1 rounded text-xs hover:bg-secondary-500/20 bg-secondary-500/10 text-secondary-700"
+          type="button"
+        >
+          typescript
+          <span
+            class="ml-1 text-neutral-700/70"
+          >
+            (7)
+          </span>
+        </button>
+      </li>
+    </ul>
+  </aside>
+</DocumentFragment>
+`;
