@@ -57,4 +57,18 @@ describe('Toast', () => {
     });
     expect(onDismiss).not.toHaveBeenCalled();
   });
+
+  it('snapshot — success + error variant 회귀 보호 (#19)', () => {
+    const { asFragment: successFragment } = render(
+      <Toast variant="success" message="저장 완료" onDismiss={vi.fn()} durationMs={null} />,
+    );
+    expect(successFragment()).toMatchSnapshot('Toast-success');
+
+    cleanup();
+
+    const { asFragment: errorFragment } = render(
+      <Toast variant="error" message="서버 오류" onDismiss={vi.fn()} durationMs={null} />,
+    );
+    expect(errorFragment()).toMatchSnapshot('Toast-error');
+  });
 });
