@@ -5,14 +5,16 @@
 ## Current Status
 
 - **Mode**: sprint
-- **Active Sprint**: 없음 (Sprint 4 종료 — Sprint 5 진입 대기, retro 권고)
+- **Active Sprint**: **Sprint 5 — 마무리·반응형·E2E** (마일스톤 마감 2026-06-10, 마일스톤 #5)
 - **Sprint 1 진행**: 5/5 완료 — 100% COMPLETE
 - **Sprint 2 진행**: 4/4 완료 (#6·#7·#8·#9 모두 머지) — **Sprint 2 100% COMPLETE**
 - **Sprint 3 진행**: 4/4 완료 (#10·#11·#12·#13 모두 머지) — **Sprint 3 100% COMPLETE**
 - **Sprint 4 진행**: 4/4 완료 (#14 PR #42, #15 PR #43, #16 PR #44, #17 PR #45 모두 머지) — **Sprint 4 100% COMPLETE 🎉**
+- **Sprint 5 진행**: 1/N (#47 PR #49 머지 — **partial fix**, 추가 follow-up 필요) / 등록 backlog: #47·#48 (P0·P1)
 - **Gates**: A=PASS, B=PASS, C=PASS (2026-05-25)
 - **Branch protection**: 미적용 (Sprint 1 follow-up 권고)
 - **`pr-body-checkboxes` status check workflow**: 미등록 (Sprint 1 follow-up 권고)
+- **`sync-issue-labels.yml` 자동 라벨 전이**: ⚠️ **partial fix** (PR #49) — `default_workflow_permissions: write` 적용 + concurrency 보강 머지 완료지만 *전역 workflow runs 여전히 0건*. H4 외 추가 원인 (GitHub Actions 자체 차단 가능성, UI 직접 확인 필요). Sprint 5 follow-up 이슈 등록 후보
 - **Currently in review**: 없음
 - **Sprint 4 Follow-up 이슈 후보** (#14·#15·#16·#17 발견, 미등록): (A) pre-existing TS 에러 3건 정정 (`client.ts:18 import.meta.env`, `routes.tsx:39·46 string|undefined`) / (B) dev/stg/prod profile script 신설 (`dev:stg`/`dev:prod` 부족) / (C) RISK-03 deps 문구 정정 (`[data, status]` 권고 vs `[data]` 실제) / (D) Toast portal·queue·stacking (Sprint 5+) / (E) ErrorBoundary Sentry 외부 송신 (별도 ADR)
 - **Sprint 3 Follow-up 이슈 후보** (#10·#11·#12·#13 발견, 미등록): (1) Pretendard self-host / (2) frontend smoke 3 profile / (3) matchRoute trailing slash / (4) frontend/src/index.ts placeholder / (5) Component primitives (Sprint 4) / (6) vite-env.d.ts / (7) request() headers spread / (8) MSW 2.x + vitest jsdom 통합 디버깅 / (9) Home 에러 재시도 버튼 / (10) Pagination ellipsis truncation / (11) formatDate 유틸 분리 (#13 MINOR-01) / (12) seed:dev idempotent 보장 (id 매번 증가)
@@ -20,6 +22,10 @@
 - **Sprint 1 Follow-up 이슈 후보** (미등록): (i) CI smoke job 신설 / (ii) pollReady fetch body 명시 cancel / (iii) engines `>=20.11.0` 정정 / (iv) GitHub Actions workflows 0 runs + sync-issue-labels.yml / (v) 13/02-catalog F-12 fan-in (Sprint 6)
 
 ## History (시간 역순)
+
+### 2026-05-27 (Sprint 5 진입 — #47 partial fix)
+
+- **PR #49 머지** — `bug(infra): sync-issue-labels.yml workflow 0 runs — FSM 라벨 자동 전이 회복 (#47)`. Sprint 5 **첫 PR (1/N)**. **mode=bug** (type:bug 라벨 자동 감지). H4 가설(`default_workflow_permissions: read`) Settings API로 `write` 적용 + workflow YAML에 concurrency PR-번호별 namespace + Issue #47 참조 주석 보강. 8 docs 산출 (investigation·contract·plan·eng-review·acceptance·risk·code-review·ai-qa-report). reviewer agent verdict=PASS (MAJOR 0/MINOR 1 doc-only — R-OPS-AUTO-LABEL ad-hoc R-ID는 04-srs §비기능 신설 후속 후보). 3 profile smoke PASS (dev 49ms / stg 62ms / prod 822ms). 단위 frontend 83 + backend 64 = 147 PASS 유지. 사용자 직접 머지 merge_commit=67ae9cc. ⚠️ **partial fix — H4 부분 충족**: Settings 변경 성공·workflow YAML 보강 완료지만 본 PR open/closed 이벤트에도 workflow runs *여전히 0건*. `gh api .../actions/runs` 전체도 0건 (Cache 0 bytes). 두 workflow 모두 state=active + Actions enabled=true + public repo + branch protection 부재인데 trigger 발생 안 함. GitHub UI Settings → Actions → General에서 추가 toggle 확인 필요. 이슈 #47은 `Closes #47`로 자동 close됐으나 라벨 자동 정리는 미동작 → 라벨 수동 제거(`status:in-progress`).
 
 ### 2026-05-27 (Sprint 4 — 100% COMPLETE)
 
@@ -85,3 +91,4 @@
 | v0.11 | 2026-05-27 | jungsoobin96@users.noreply.github.com | **Sprint 3 100% COMPLETE** (#13 PR #41 머지, merge_commit=15ccfdf) + Sprint 4 진입 (#14 PR OPEN). Editor 페이지 실 form 구현. EditorForm controlled + Editor 신구 분기. 09 API spec createArticle/updateArticle 첫 사용처. reviewer PASS (MAJOR 0/MINOR 2). MINOR-01 (React hook 순서) 같은 PR 보정. 59/60 unit + 1 skip. ui_changed=true 4번째 발동. |
 | v0.12 | 2026-05-27 | jungsoobin96@users.noreply.github.com | **Sprint 4 1/4 머지 (#14 PR #42 = b432718) + Sprint 4 #15 PR OPEN**. Article 삭제 흐름 결합 — ConfirmModal 신규 + Article handleConfirmDelete + cascade 시각. reviewer PASS (MAJOR 0/MINOR 2/INFO 2). MINOR-1·2 같은 PR 보정 (ac9c798). 66/67 unit + 1 skip. ui_changed=true 5번째 발동. 13/02-catalog v0.10: R-F-03·R-F-07 §1 FE 시나리오 추가. |
 | v0.13 | 2026-05-27 | jungsoobin96@users.noreply.github.com | **Sprint 4 2/4 머지 (#15 PR #43 = a3d31b7) + Sprint 4 #16 PR OPEN**. 댓글 작성·삭제 UI — CommentForm 신규 + CommentList onDelete + Article 댓글 흐름 결합 + ConfirmModal 재사용(#15) + confirmTarget discriminated union. 응답 후 추가(낙관적 갱신 X). reviewer PASS (MAJOR 0/MINOR 2/INFO 2). MINOR useId·textarea 반응형 같은 PR 보정 (ef775cb). 74/75 unit + 1 skip. ui_changed=true 6번째 발동. ConfirmModal 재사용 첫 검증. 13/02-catalog v0.11: R-F-05·R-F-06 §1 FE 시나리오 추가. |
+| v0.14 | 2026-05-27 | jungsoobin96@users.noreply.github.com | **Sprint 5 진입 + #47 PR #49 partial fix 머지** (merge_commit=67ae9cc). bug(infra) sync-issue-labels.yml workflow 0 runs — H4 가설(`default_workflow_permissions: read`) Settings API로 `write` 적용 + workflow YAML concurrency 보강 + Issue #47 주석. 8 docs 산출 (investigation/contract/plan/eng-review/acceptance/risk/code-review/ai-qa-report). reviewer PASS (MAJOR 0/MINOR 1 doc-only R-OPS-AUTO-LABEL ad-hoc). 3 profile smoke PASS (dev 49ms/stg 62ms/prod 822ms). ⚠️ **partial fix**: Settings 적용 성공·workflow YAML 보강 완료지만 전역 workflow runs 여전히 0건 — GitHub UI 추가 toggle/plan 확인 필요. 이슈 #47 `Closes #47`로 자동 close + 라벨 수동 정리(`status:in-progress` 제거). Sprint 4 retro §5 P0 항목에 partial fix 결과 반영. 본 PR 머지 후 누락된 PR #45·#46 history 행도 별도 docs PR 후보. |
