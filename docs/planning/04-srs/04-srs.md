@@ -1,24 +1,25 @@
 ---
 doc_type: srs
-version: v0.1 (Draft)
-status: Draft
-author: woosung.ahn@bespinglobal.com
-date: 2026-05-22
+version: v0.2
+status: Accepted
+author: jungsoobin96@users.noreply.github.com
+date: 2026-05-27
 gate: B
 related:
-  R-ID: []
+  R-ID: [R-F-01, R-F-02, R-F-03, R-F-04, R-F-05, R-F-06, R-F-07, R-F-08, R-N-01, R-N-02, R-N-03, R-N-04, R-N-05, R-N-06, R-N-07, R-OPS-AUTO-LABEL, R-OPS-SMOKE, R-OPS-WORKFLOW, R-OPS-DOCS-SYNC]
   F-ID: []
   supersedes: null
 ---
 
 # Conduit Lite — SRS
 
-> Gate B 입력. 03 User Scenarios의 UC-XX를 R-F-XX (기능)·R-N-XX (비기능) 요구사항으로 카탈로그. 각 R-ID는 ADR-0014·0023 강제 — 우선순위 P0~P3, Acceptance(Given/When/Then), 테스트 시나리오(Happy + Failure), 3축(단위·통합·E2E) 결정.
+> Gate B 입력. 03 User Scenarios의 UC-XX를 R-F-XX (기능)·R-N-XX (비기능) 요구사항으로 카탈로그. 각 R-ID는 ADR-0014·0023 강제 — 우선순위 P0~P3, Acceptance(Given/When/Then), 테스트 시나리오(Happy + Failure), 3축(단위·통합·E2E) 결정. **운영 비기능은 R-OPS-* prefix 별도 체계** (ADR-0002, #52 PR).
 
 ## 변경 이력
 
 | Version | Date | Author | Change |
 |---|---|---|---|
+| v0.2 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #52 — §3 비기능에 **R-OPS-* 운영 비기능 R-ID 체계 신설** (4건: R-OPS-AUTO-LABEL/SMOKE/WORKFLOW/DOCS-SYNC). #47·#51에서 ad-hoc 워크어라운드로 사용한 `R-OPS-AUTO-LABEL`을 정본 등록 + 인접 3건(SMOKE/WORKFLOW/DOCS-SYNC) 동시 도입. ADR-0029/0037 v1.1/0040/0047 매핑. frontmatter status Draft → Accepted, related.R-ID에 R-F-*/R-N-* + R-OPS-* 일괄 등록. ADR-0002 mod-r-ops-r-id-taxonomy 신설. |
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-init Phase 1, RFP §3·§5·§6 기반) |
 
 ## 1. 범위 / 가정
@@ -271,6 +272,74 @@ related:
   - 단위: N/A
   - 통합: N/A
   - E2E: N/A (정적 분석 + 훅)
+
+---
+
+> **운영 비기능 (R-OPS-*) — Issue #52, ADR-0002로 신설**: agent-toolkit 자동화 신뢰성을 위한 별도 prefix 체계. R-N-*(제품 비기능)와 의미 분리. 4건 모두 ADR 출처 명시.
+
+### R-OPS-AUTO-LABEL: FSM 라벨 자동 전이 (ADR-0029)
+
+- **출처**: ADR-0029 (PR 이벤트 기반 status:* 자동 전이/청소), #47 PR #49 + #51 PR #53 검증 완료
+- **우선순위**: P0
+- **설명**: PR `opened`/`ready_for_review` 시 linked issue 라벨 `status:in-progress` → `status:in-review` 자동 전이. PR `closed && merged==true` 시 `status:*` 일괄 제거(이전 v1.2에서 `tested` 라벨 폐지로 보존 대상 없음). `.github/workflows/sync-issue-labels.yml`이 책임.
+- **Acceptance**:
+  - Given PR open + PR body에 `Closes #N` When 30초 대기 Then `gh issue view N --json labels` 결과에 `status:in-review` 포함, `status:in-progress` 부재
+  - Given PR 머지(closed && merged==true) When 30초 대기 Then `gh issue view N --json state,labels` → state=CLOSED + `status:*` 라벨 0건
+- **테스트 시나리오**:
+  - Happy: 매 PR open/머지에서 라벨 자동 전이 (#51 이후 회복, #52~ 자연 회귀 관찰)
+  - Failure: dispatcher 비활성(#51 H6 가설) / `Closes #N` 누락 / workflow YAML 권한 부족 → 라벨 미전이
+- **테스트 결정 (3축)**:
+  - 단위: N/A (GitHub Actions runtime에서만 실행)
+  - 통합: ✅ (PR open/머지 시 `gh api .../actions/workflows/sync-issue-labels.yml/runs` + `gh issue view` 검증)
+  - E2E: N/A (운영 자동화는 E2E 부적합)
+
+### R-OPS-SMOKE: 3 profile 부팅 smoke 자동화 (ADR-0037 v1.1)
+
+- **출처**: ADR-0037 v1.1 (AI 게이트 6축 6번 — 매 PR dev/stg/prod 3 profile 로컬 부팅 검증), Sprint 1 #5 PR #33 baseline
+- **우선순위**: P0
+- **설명**: 매 PR에서 `pnpm run smoke:3profiles` 실행 시 dev/stg/prod 모두 ready 신호(`backend ready in Xms → GET /api/articles → 200 → PASS`) + 에러 0건. 부팅 자산(`.env.{dev,stg,prod}.example`·migrations·lockfile) profile별 동기 갱신.
+- **Acceptance**:
+  - Given fresh checkout + `.env.{dev,stg,prod}` cp + prisma db push When `pnpm run smoke:3profiles` 실행 Then 3/3 PASS + 각 profile ready < 5000ms
+  - Given 부팅 자산 변경 PR When AI 게이트 6번째 축 검증 Then profile 동기 누락 시 BLOCK
+- **테스트 시나리오**:
+  - Happy: 매 PR smoke 3/3 PASS (R-N-04와 별도 axis — R-N-04는 fresh checkout 검증, R-OPS-SMOKE는 매 PR 자동화 신뢰성)
+  - Failure: 한 profile만 부팅 실패 → PR 머지 BLOCK (CLAUDE.md 필수 규칙 #10)
+- **테스트 결정 (3축)**:
+  - 단위: N/A
+  - 통합: ✅ (CI smoke job 신설 시 또는 LLM 직접 실행 — `pnpm run smoke:3profiles`)
+  - E2E: N/A
+
+### R-OPS-WORKFLOW: GitHub Actions workflow 양축 검증 (ADR-0047)
+
+- **출처**: ADR-0047 (매 PR workflow YAML 로컬 + GitHub 양축 검증), CLAUDE.md 필수 규칙 #13
+- **우선순위**: P0
+- **설명**: 매 PR Manual verification 절에 workflow 로컬 검증 증거(act / manual reproduction / dev fork 실 실행 중 1택의 명령 + 결과) 통합 1줄 명시. workflow YAML 변경 여부 무관 전 PR 적용. PR title 정규식(ADR-0021) PASS 강제.
+- **Acceptance**:
+  - Given PR body의 Manual verification 절 When grep `- \[ \] GitHub Actions 워크플로 로컬 검증` Then 1건 존재 + 명령 + 결과(PASS/FAIL/skip 사유) 명시
+  - Given PR title When ADR-0021 정규식 `^(feat|fix|chore|docs|test|refactor)\([a-z][a-z0-9,_-]*\): .+$` 매칭 Then issue-pr-title-lint.yml conclusion=success
+- **테스트 시나리오**:
+  - Happy: 매 PR Manual verification에 양축 검증 1줄 명시 + title 정규식 PASS
+  - Failure: workflows/ 디렉토리 부재 또는 PR 트리거 워크플로 0개 → N/A + 사유 명시 허용. title prefix `bug/mod/design` 등 정규식 미정합 → fail (Sprint 5 follow-up — branch prefix vs title prefix 정책 불일치 fix)
+- **테스트 결정 (3축)**:
+  - 단위: N/A
+  - 통합: ✅ (manual reproduction — `printf 'Closes #N' | grep -oiE '...'` 실행 + workflow runs trigger 자연 관찰)
+  - E2E: N/A
+
+### R-OPS-DOCS-SYNC: LOCAL.md ↔ 12-scaffolding 동기 (ADR-0040)
+
+- **출처**: ADR-0040 (LOCAL.md 부팅 사용자 가이드 정본 + §3 양축 동기), CLAUDE.md 필수 규칙 #10
+- **우선순위**: P1
+- **설명**: 부팅 자산 변경 시 LOCAL.md §2 셋업·§3 profile별 부팅 명령·§4 자산 표를 같은 PR diff에 동기 갱신. 12-scaffolding/typescript.md §7(SoT) ↔ LOCAL.md(유저 facing) 양축 정합.
+- **Acceptance**:
+  - Given 부팅 자산 변경 PR (`.env.{dev,stg,prod}.example`·migrations·lockfile·setup scripts) When PR diff에 LOCAL.md 갱신 포함 여부 검증 Then LOCAL.md 동기 갱신 PR diff 포함
+  - Given 부팅 자산 변경 없는 PR When LOCAL.md 동기 체크 Then `LOCAL.md 동기 = N/A 부팅 자산 변경 없음` 명시 허용
+- **테스트 시나리오**:
+  - Happy: 부팅 자산 변경 PR에서 LOCAL.md 동기 갱신 + 12-scaffolding §7 동기 (양축)
+  - Failure: 부팅 자산은 변했는데 LOCAL.md 미갱신 → AI 게이트 6번째 축 BLOCK
+- **테스트 결정 (3축)**:
+  - 단위: N/A
+  - 통합: ✅ (`git diff main...HEAD --name-only`로 부팅 자산 + LOCAL.md 동시 포함 여부 검증)
+  - E2E: N/A (LOCAL.md 절차 사람 수동 검증은 R-N-03 README 재현성에서 흡수)
 
 ## 4. 인터페이스 요구사항
 
