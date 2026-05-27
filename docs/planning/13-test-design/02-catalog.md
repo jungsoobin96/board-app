@@ -24,6 +24,7 @@ related:
 | v0.3 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #7 PR — F-02 (태그 필터) + F-08 (인기 태그 사이드바) §1·§2 fan-in. ADR-0035 WARN 2건 추가 해소 (잔여 F-12만 Sprint 6 별 진행). |
 | v0.4 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #9 PR — R-N-02 §2 통합 보강 fan-in (전 9 endpoint × ~2 에러 + notFoundHandler + 의도 throw 500). 단위 layer와 별 axis 명시. |
 | v0.5 | 2026-05-26 | jungsoobin96@users.noreply.github.com | Issue #10 PR — R-F-08 §1 단위 보강(matchRoute 헬퍼) + F-11 §1 skeleton 발현 fan-in (frontend 골격 도입). 정밀 반응형은 Sprint 5 #21 별 진행. |
+| v0.6 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #11 PR — R-N-02 §1 frontend layer 보강 fan-in (normalizeResponse + normalizeNetworkError + 9 method URL/method 정합). backend §1 errorHandler 단위(#2) + 통합(#9) 위에 FE client 단위 layer 추가. R-N-02 매트릭스 ✅·✅·✅ 그대로. |
 
 ## 1. 단위 테스트 카탈로그
 
@@ -130,6 +131,17 @@ related:
 - Happy: 10 §3 design token 4종 CSS Variables → Tailwind theme.extend 매핑 (`bg-primary-500` → `#3b82f6`)
 - 사용자 브라우저 검증: 5 path 진입 + Home `bg-primary-500` 시각 확인 (스크린샷 첨부)
 - 발현: Sprint 3 / Issue #10. 정밀 반응형 검증은 Sprint 5 #21
+
+### R-N-02: 에러 응답 schema 일관성 — 단위 (frontend layer 보강)
+
+출처: 04#R-N-02, M4 FE-api-client
+테스트 레벨: 단위
+대상 모듈: M4 FE-api-client `normalizeResponse` + `normalizeNetworkError` + 9 method (client.ts)
+- Happy: 9 method × URL/method 정합 (`expect(fetch).toHaveBeenCalledWith(...)`)
+- Failure: 4xx/5xx + `{error}` body → NormalizedError(status, message)
+- Failure: body parse fail → NormalizedError(status, '서버 응답을 처리할 수 없습니다')
+- Failure: offline (fetch reject) → NormalizedError(0, '네트워크 오류')
+- 발현: Sprint 3 / Issue #11 (PR feat/frontend-api-client-issue-11). backend errorHandler 단위(#2) + 통합(#9) 양축 위에 frontend client 단위 layer 추가
 
 ### F-05: 댓글 작성·삭제 — 단위
 

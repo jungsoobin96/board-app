@@ -8,19 +8,21 @@
 - **Active Sprint**: Sprint 3 — FE 골격 + Home·Article (마감 2026-06-03)
 - **Sprint 1 진행**: 5/5 완료 — 100% COMPLETE
 - **Sprint 2 진행**: 4/4 완료 (#6·#7·#8·#9 모두 머지) — **Sprint 2 100% COMPLETE**
-- **Sprint 3 진행**: 1 in-review (#10 PR OPEN 본 PR) → 본 PR 머지 시 Sprint 3 1/4 (25%)
+- **Sprint 3 진행**: 1/4 머지 + 1 in-review (#10 머지, #11 PR OPEN 본 PR) → 본 PR 머지 시 Sprint 3 2/4 (50%)
 - **Gates**: A=PASS, B=PASS, C=PASS (2026-05-25)
 - **Branch protection**: 미적용 (Sprint 1 follow-up 권고)
 - **`pr-body-checkboxes` status check workflow**: 미등록 (Sprint 1 follow-up 권고)
-- **Currently in review**: PR #N (이슈 #9, 에러 schema 통합 회귀 — R-N-02 매트릭스 완결, Sprint 2 마지막)
-- **Sprint 2 Follow-up 이슈 후보**: (1) asyncHandler 유틸 분리 (3 controller 중복 확정) / (2) tags integration 시드 Promise.all 최적화 (60+ await)
-- **Sprint 1 Follow-up 이슈 후보** (미등록, 별 진행): (a) CI smoke job 신설 / (b) pollReady fetch body 명시 cancel / (c) engines `>=20.11.0` 정정 / (d) GitHub Actions workflows 0 runs 진단 + sync-issue-labels.yml 복구 / (e) 13/02-catalog F-12 fan-in (Sprint 6)
+- **Currently in review**: PR #N (이슈 #11, api-client + shared types + 에러 정규화. ui_changed=false)
+- **Sprint 3 Follow-up 이슈 후보** (#10·#11 발견, 미등록): (1) Pretendard self-host / (2) frontend smoke 3 profile / (3) matchRoute trailing slash / (4) frontend/src/index.ts placeholder 정리 / (5) Component primitives 라이브러리 (Sprint 4) / (6) vite-env.d.ts 추가 (#11 INFO-CR-04) / (7) request() headers spread 순서 (#11 MINOR-CR-01)
+- **Sprint 2 Follow-up 이슈 후보** (미등록): (a) asyncHandler 유틸 분리 (3 controller 중복) / (b) tags integration 시드 Promise.all / (c) error-schema afterEach mock 단순화
+- **Sprint 1 Follow-up 이슈 후보** (미등록): (i) CI smoke job 신설 / (ii) pollReady fetch body 명시 cancel / (iii) engines `>=20.11.0` 정정 / (iv) GitHub Actions workflows 0 runs + sync-issue-labels.yml / (v) 13/02-catalog F-12 fan-in (Sprint 6)
 
 ## History (시간 역순)
 
-### 2026-05-27 (Sprint 3 진입)
+### 2026-05-27 (Sprint 3)
 
-- **PR #N OPEN** — `feat(frontend): frontend 골격 + Vite + Tailwind + Router + 토큰 (#10)`. Sprint 3 첫 PR. frontend 빈 워크스페이스에 Vite + React 18 + react-router-dom 6 + Tailwind 3 + design token 4종 실 도입. 5 commits + 1 user lock commit = 6 commits / +515 lines (frontend src 15 파일 + 단위 test + env·LOCAL.md·12-scaffolding 동기). **ui_changed=true 첫 발동** — AI 게이트 5번째 축(브라우저 골든패스 + stylesheet) 정식 발동. 사용자 PowerShell `pnpm install` + frontend dev 부팅 + 5 path 브라우저 검증 + Home 스크린샷 첨부 완료(commit 347166e). reviewer agent verdict=PASS, MAJOR 0/MINOR 3/INFO 5. 13/02-catalog v0.5: R-F-08 §1 보강 + F-11 §1 skeleton 발현 fan-in.
+- **PR #N OPEN** — `feat(frontend): api-client + shared types + 에러 정규화 (#11)`. Sprint 3 두 번째 이슈. backend 9 endpoint wrap + shared DTO 4종(Article·Comment·Tag·ApiError) + NormalizedError class + offline (status=0) + 4xx/5xx body parse fallback. 4 commits / +442 lines (shared 4 + frontend api 2 + 단위 2 + boot 보정 1). ui_changed=false (`.ts` 만). reviewer agent 1차 NEEDS-WORK (2 MAJOR — Response.clone/mock 재사용 결함) → b89c782 commit 보정 → 재검수 verdict=PASS, MAJOR 0/MINOR 1/INFO 4. 25/25 unit PASS 확인. 13/02-catalog v0.6: R-N-02 §1 frontend layer 보강 fan-in.
+- **PR #38 머지** — `feat(frontend): frontend 골격 + Vite + Tailwind + Router + 토큰 (#10)`. Sprint 3 첫 PR. ui_changed=true 첫 발동 — 사용자 PowerShell `pnpm install` + frontend dev + 5 path 브라우저 검증 + Home 스크린샷 첨부. 사용자 직접 머지. merge_commit=e87a781.
 
 ### 2026-05-26 (Sprint 2)
 
@@ -66,3 +68,4 @@
 | v0.5 | 2026-05-26 | woosung.ahn@bespinglobal.com | Sprint 2 2/4 머지 + #8 PR OPEN 갱신. #7 PR #35 머지 (사용자 직접, merge_commit=1dbb642). R-F-07 매트릭스 완결 (rollback 시나리오 추가). |
 | v0.6 | 2026-05-26 | woosung.ahn@bespinglobal.com | Sprint 2 3/4 머지 + #9 PR OPEN 갱신. #8 PR #36 머지 (사용자 직접, merge_commit=80024aa). R-N-02 매트릭스 완결 (12 통합 it 추가). Sprint 2 마지막 이슈 — 머지 시 100% 완결. |
 | v0.7 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Sprint 2 100% COMPLETE + Sprint 3 진입 (#10 PR OPEN). #9 PR #37 머지 (merge_commit=56bf57f). frontend 골격 실 도입 — ui_changed=true 첫 발동. Sprint 3 follow-up 5건 명시. |
+| v0.8 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Sprint 3 1/4 머지 + #11 PR OPEN. #10 PR #38 머지 (merge_commit=e87a781). api-client + shared types 도입. reviewer 1차 NEEDS-WORK → 같은 PR 보정 → 재검수 PASS. Sprint 3 follow-up +2 (vite-env.d.ts / request headers spread). |
