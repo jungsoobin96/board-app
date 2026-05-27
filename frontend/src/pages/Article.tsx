@@ -1,17 +1,24 @@
 /**
- * S-02 Article 상세 — 본문 + 메타 + 태그 + 댓글 목록 + 수정/삭제 흐름.
+ * S-02 Article 상세 — 본문 + 메타 + 태그 + 댓글 작성/목록/삭제 흐름.
  * 404 시 NotFound 컴포넌트 직 렌더 (URL 유지).
- * 수정 → /editor/:id (#14 PR #42), 삭제 → ConfirmModal + deleteArticle + navigate (#15 본 PR).
+ * 수정 → /editor/:id (#14), 글 삭제 → ConfirmModal (#15), 댓글 작성/삭제 → CommentForm + ConfirmModal 재사용 (#16).
+ *
+ * 댓글 상태: useComments 결과를 commentsLocal에 mirror하여 작성 성공 시 prepend, 삭제 성공 시 filter out.
+ * ConfirmModal은 단일 mount + confirmTarget state로 글/댓글 분기.
  */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import type { Comment, CommentInput } from '@app/shared';
 import { NormalizedError } from '@app/shared';
 import { useArticle } from '../hooks/useArticle';
 import { useComments } from '../hooks/useComments';
-import { deleteArticle } from '../api/client';
+import { createComment, deleteArticle, deleteComment } from '../api/client';
 import { CommentList } from '../components/CommentList';
+import { CommentForm } from '../components/CommentForm';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { NotFound } from './NotFound';
+
+type ConfirmTarget = { type: 'article' } | { type: 'comment'; commentId: number };
 
 export const Article = (): JSX.Element => {
   const { id: idParam } = useParams<{ id: string }>();
@@ -21,9 +28,17 @@ export const Article = (): JSX.Element => {
 
   const articleState = useArticle(id);
   const commentsState = useComments(id);
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [commentsLocal, setCommentsLocal] = useState<Comment[]>([]);
+  const [confirmTarget, setConfirmTarget] = useState<ConfirmTarget | null>(null);
   const [deletePending, setDeletePending] = useState(false);
   const [deleteError, setDeleteError] = useState<NormalizedError | null>(null);
+
+  // useComments 완료 → commentsLocal 초기화
+  useEffect(() => {
+    if (commentsState.data) {
+      setCommentsLocal(commentsState.data);
+    }
+  }, [commentsState.data]);
 
   // id 자체가 invalid → NotFound
   if (id === -1) return <NotFound />;
@@ -64,17 +79,28 @@ export const Article = (): JSX.Element => {
   const handleEdit = (): void => {
     navigate(`/editor/${article.id}`);
   };
-  const handleDelete = (): void => {
+  const handleDeleteArticle = (): void => {
     setDeleteError(null);
-    setConfirmOpen(true);
+    setConfirmTarget({ type: 'article' });
+  };
+  const handleDeleteComment = (commentId: number): void => {
+    setDeleteError(null);
+    setConfirmTarget({ type: 'comment', commentId });
   };
   const handleConfirmDelete = async (): Promise<void> => {
+    if (!confirmTarget) return;
     setDeletePending(true);
     setDeleteError(null);
     try {
-      await deleteArticle(article.id);
-      setConfirmOpen(false);
-      navigate('/');
+      if (confirmTarget.type === 'article') {
+        await deleteArticle(article.id);
+        setConfirmTarget(null);
+        navigate('/');
+      } else {
+        await deleteComment(article.id, confirmTarget.commentId);
+        setCommentsLocal((prev) => prev.filter((c) => c.id !== confirmTarget.commentId));
+        setConfirmTarget(null);
+      }
     } catch (err) {
       const normalized =
         err instanceof NormalizedError
@@ -87,9 +113,19 @@ export const Article = (): JSX.Element => {
   };
   const handleCancelDelete = (): void => {
     if (deletePending) return;
-    setConfirmOpen(false);
+    setConfirmTarget(null);
     setDeleteError(null);
   };
+  const handleCreateComment = async (input: CommentInput): Promise<void> => {
+    const created = await createComment(article.id, input);
+    setCommentsLocal((prev) => [created, ...prev]);
+  };
+
+  const confirmTitle = confirmTarget?.type === 'comment' ? '댓글 삭제 확인' : '글 삭제 확인';
+  const confirmMessage =
+    confirmTarget?.type === 'comment'
+      ? '이 댓글을 삭제하시겠습니까?'
+      : '이 글을 삭제하시겠습니까? 댓글도 함께 삭제됩니다.';
 
   return (
     <article aria-labelledby="article-heading">
@@ -120,7 +156,7 @@ export const Article = (): JSX.Element => {
           </button>
           <button
             type="button"
-            onClick={handleDelete}
+            onClick={handleDeleteArticle}
             className="px-3 py-1 rounded border border-danger-500 text-danger-500 text-sm font-semibold hover:bg-danger-500 hover:text-neutral-0"
           >
             삭제
@@ -140,6 +176,7 @@ export const Article = (): JSX.Element => {
           ))}
         </ul>
       )}
+      <CommentForm onSubmit={handleCreateComment} />
       {/* 댓글 영역 — useComments 5상태 별 처리 */}
       {commentsState.status === 'loading' && (
         <div aria-busy="true" className="animate-pulse h-20 bg-neutral-100 rounded mt-8" />
@@ -149,13 +186,13 @@ export const Article = (): JSX.Element => {
           댓글을 불러올 수 없습니다.
         </div>
       )}
-      {(commentsState.status === 'success' || commentsState.status === 'empty') && commentsState.data && (
-        <CommentList comments={commentsState.data} />
+      {(commentsState.status === 'success' || commentsState.status === 'empty') && (
+        <CommentList comments={commentsLocal} onDelete={handleDeleteComment} />
       )}
       <ConfirmModal
-        open={confirmOpen}
-        title="글 삭제 확인"
-        message="이 글을 삭제하시겠습니까? 댓글도 함께 삭제됩니다."
+        open={confirmTarget !== null}
+        title={confirmTitle}
+        message={confirmMessage}
         confirmLabel="삭제"
         pendingLabel="삭제 중…"
         isPending={deletePending}

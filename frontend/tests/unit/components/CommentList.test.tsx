@@ -1,8 +1,8 @@
 /**
- * CommentList RTL snapshot + 빈 케이스.
+ * CommentList RTL snapshot + 빈 케이스 + onDelete prop (#16).
  */
-import { describe, it, expect, afterEach } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
+import { describe, it, expect, afterEach, vi } from 'vitest';
+import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { CommentList } from '../../../src/components/CommentList';
 import type { Comment } from '@app/shared';
 
@@ -39,5 +39,17 @@ describe('CommentList', () => {
   it('헤더 "댓글 (N)" 카운트 표시', () => {
     render(<CommentList comments={sampleComments} />);
     expect(screen.getByRole('heading', { name: /댓글 \(2\)/ })).toBeInTheDocument();
+  });
+
+  it('onDelete prop 있을 때 각 댓글에 삭제 버튼 노출 + 클릭 시 commentId로 호출 (#16)', () => {
+    const onDelete = vi.fn();
+    render(<CommentList comments={sampleComments} onDelete={onDelete} />);
+
+    const deleteButtons = screen.getAllByRole('button', { name: /댓글 #\d+ 삭제/ });
+    expect(deleteButtons).toHaveLength(2);
+
+    fireEvent.click(deleteButtons[0]);
+    expect(onDelete).toHaveBeenCalledTimes(1);
+    expect(onDelete).toHaveBeenCalledWith(1);
   });
 });

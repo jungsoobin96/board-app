@@ -29,6 +29,7 @@ related:
 | v0.8 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #13 PR — R-F-03·R-F-06·R-F-08·F-04·F-05(목록만) §1 단위 fan-in (Article 상세 + 댓글 목록 — useArticle/useComments 5상태·404 분기·CommentList RTL snapshot). 수정/삭제 버튼 mount만 (Sprint 4에서 핸들러 결합). |
 | v0.9 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #14 PR — R-F-02·R-F-05·R-F-08·F-03·F-06·F-11 §1 단위 fan-in (Editor 페이지 — EditorForm controlled 4 필드·M9 정합 인라인 검증·submit 중복 방지·NormalizedError alert·initialValues 사전 로드 + Editor 신구 분기·404 NotFound·invalid id NotFound·loading skeleton). frontend layer 추가 — backend §1·§2 위에 FE form 검증 layer fan-in. Article "수정" 버튼 onClick 결합으로 F-06·F-11 매트릭스 ✅. |
 | v0.10 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #15 PR — R-F-03·R-F-07 §1 단위 FE 시나리오 추가 (Article 삭제 흐름 — ConfirmModal RTL 4건 + Article RTL 3건). 삭제 모달 노출·확정 deleteArticle+navigate('/')·실패 alert+모달유지·pending race 차단·cascade 시각(navigate 후 미노출 + direct URL 재진입 → NotFound). R-F-03·R-F-07 매트릭스 그대로(✅·✅·✅). |
+| v0.11 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #16 PR — R-F-05·R-F-06 §1 단위 FE 시나리오 추가 (댓글 작성/삭제 UI — CommentForm RTL 4건 + CommentList onDelete 1건 + Article 댓글 흐름 RTL 3건). CommentForm controlled body·author + M9 trim 0자 차단 + body reset·author 유지 + NormalizedError alert + 응답 후 추가 prepend + ConfirmModal 재사용(#15) + confirmTarget discriminated union으로 글/댓글 모달 단일 mount 분기. R-F-05·R-F-06 매트릭스 그대로(✅·✅·✅). |
 
 ## 1. 단위 테스트 카탈로그
 
@@ -89,14 +90,21 @@ related:
 - FE Happy (#14): EditorForm `validate()` 정상 입력 → fieldErrors 0개 → onSubmit 호출
 - FE Failure (#14): title 빈 값 → "제목은 필수입니다" / title > 200자 → "제목은 200자 이하여야 합니다" / body 빈 값 → "본문은 필수입니다" / author 빈 값 → "작성자는 필수입니다" / author > 50자 → "작성자는 50자 이하여야 합니다" (09 §3 한국어 메시지 backend와 일관)
 - FE Happy (#14): `parseTagList(" JavaScript, intro,  JavaScript ,  ")` → `["javascript", "intro"]` (trim·lower·중복·빈 토큰 제거)
+- FE Happy (#16): CommentForm `validate()` 정상 입력(body·author trim 후 1자 이상) → fieldErrors 0 → onSubmit 호출
+- FE Failure (#16): CommentForm body 빈 값 / 공백만 → "본문은 필수입니다" 인라인 + onSubmit 미호출 + author 입력값 보존
 
 ### R-F-06: 댓글 API — 단위
 
 출처: 04#R-F-06, 05#F-05
 테스트 레벨: 단위
-대상 모듈: M6 commentsController, M9 validateCommentInput
+대상 모듈: M6 commentsController, M9 validateCommentInput, M3 FE CommentForm/CommentList/Article 댓글 흐름
 - Happy: body·author 정상 → 응답 객체 형식
 - Failure: 빈 body → ValidationError
+- FE Happy (#16): CommentForm submit 성공 → createComment 호출 + 응답 후 commentsLocal에 prepend + body reset + author 유지
+- FE Happy (#16): CommentList onDelete prop 클릭 → onDelete(commentId) 1회 호출 (`aria-label="댓글 #N 삭제"`)
+- FE Happy (#16): Article 댓글 삭제 모달 확정 → deleteComment 호출 + commentsLocal에서 filter out
+- FE Failure (#16): CommentForm NormalizedError → 상단 `role="alert"` + 입력값 보존
+- FE 회귀 (#16): #15 글 삭제 모달과 댓글 삭제 모달 독립 — `confirmTarget: 'article' | 'comment'` discriminated union으로 단일 mount 분기
 
 ### R-F-07: cascade — 단위
 
