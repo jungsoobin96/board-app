@@ -3,7 +3,7 @@
  * 404 시 NotFound 컴포넌트 직 렌더 (URL 유지).
  * 수정/삭제 핸들러는 Sprint 4 별 PR에서 결합 — 본 PR은 mount만.
  */
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useArticle } from '../hooks/useArticle';
 import { useComments } from '../hooks/useComments';
 import { CommentList } from '../components/CommentList';
@@ -11,6 +11,7 @@ import { NotFound } from './NotFound';
 
 export const Article = (): JSX.Element => {
   const { id: idParam } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const idParsed = idParam ? Number(idParam) : NaN;
   const id = Number.isInteger(idParsed) && idParsed >= 1 ? idParsed : -1;
 
@@ -53,14 +54,13 @@ export const Article = (): JSX.Element => {
 
   const article = articleState.data;
 
-  // TODO(Sprint 4): 수정/삭제 onClick 핸들러 결합
-  //   - 수정: navigate(`/editor/${article.id}`)
-  //   - 삭제: Modal confirm → deleteArticle + navigate('/')
+  // 수정 → /editor/:id (#14 결합 완료)
+  // 삭제 → Sprint 4 #15 feat-article-delete-ux에서 결합
   const handleEdit = (): void => {
-    // Sprint 4 feat-editor-page에서 결합
+    navigate(`/editor/${article.id}`);
   };
   const handleDelete = (): void => {
-    // Sprint 4 feat-article-delete-ux에서 결합
+    // Sprint 4 #15
   };
 
   return (
