@@ -8,11 +8,13 @@ import { normalizeResponse, normalizeNetworkError } from '../../../src/api/norma
 
 describe('normalizeResponse', () => {
   it('400 + {error} body → NormalizedError(400, body.error)', async () => {
-    const res = new Response(JSON.stringify({ error: '잘못된 페이지/리미트 값입니다' }), {
-      status: 400,
-    });
-    await expect(normalizeResponse(res)).rejects.toThrow(NormalizedError);
-    await expect(normalizeResponse(res.clone())).rejects.toMatchObject({
+    // Response body는 한 번 소비되면 재사용 불가 — 각 expect마다 새 Response 생성
+    const makeRes = () =>
+      new Response(JSON.stringify({ error: '잘못된 페이지/리미트 값입니다' }), {
+        status: 400,
+      });
+    await expect(normalizeResponse(makeRes())).rejects.toThrow(NormalizedError);
+    await expect(normalizeResponse(makeRes())).rejects.toMatchObject({
       status: 400,
       message: '잘못된 페이지/리미트 값입니다',
     });

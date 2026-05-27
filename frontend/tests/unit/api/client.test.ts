@@ -60,9 +60,10 @@ describe('listArticles', () => {
   });
 
   it('AC-02: 400 응답 → NormalizedError(400, "잘못된 페이지/리미트 값입니다")', async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(
-      jsonResponse({ error: '잘못된 페이지/리미트 값입니다' }, 400),
-    );
+    // listArticles 호출이 2회 — 각각 mock 1회씩 (mockResolvedValueOnce는 단일 사용)
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(jsonResponse({ error: '잘못된 페이지/리미트 값입니다' }, 400))
+      .mockResolvedValueOnce(jsonResponse({ error: '잘못된 페이지/리미트 값입니다' }, 400));
     await expect(listArticles({ page: -1 })).rejects.toThrow(NormalizedError);
     await expect(listArticles({ page: -1 })).rejects.toMatchObject({
       status: 400,
