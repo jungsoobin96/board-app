@@ -1,9 +1,11 @@
 /**
  * Pagination snapshot + onPageChange click.
  */
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { render, screen, cleanup } from '@testing-library/react';
 import { Pagination } from '../../../src/components/Pagination';
+
+afterEach(() => cleanup());
 
 describe('Pagination', () => {
   it('snapshot — total=25 limit=10 page=2', () => {

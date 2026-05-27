@@ -1,0 +1,62 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ArticleCard > snapshot — sample article + 2 tags 1`] = `
+<DocumentFragment>
+  <article
+    class="border border-neutral-300 rounded p-4 hover:border-primary-500 transition-colors"
+  >
+    <a
+      class="block"
+      href="/article/1"
+    >
+      <h2
+        class="text-lg font-semibold text-neutral-900 mb-2"
+      >
+        샘플 제목
+      </h2>
+      <p
+        class="text-sm text-neutral-700 line-clamp-2 mb-3"
+      >
+        샘플 본문입니다. 두 줄 이상이면 line-clamp-2로 잘립니다.
+      </p>
+    </a>
+    <div
+      class="flex items-center justify-between text-xs text-neutral-700"
+    >
+      <span>
+        <span
+          class="font-semibold"
+        >
+          tester
+        </span>
+        <span
+          aria-hidden="true"
+          class="mx-2"
+        >
+          ·
+        </span>
+        <time
+          datetime="2026-01-15T10:30:00.000Z"
+        >
+          2026-01-15
+        </time>
+      </span>
+      <ul
+        aria-label="태그"
+        class="flex gap-1 flex-wrap"
+      >
+        <li
+          class="bg-secondary-500/10 text-secondary-700 px-2 py-1 rounded text-xs"
+        >
+          javascript
+        </li>
+        <li
+          class="bg-secondary-500/10 text-secondary-700 px-2 py-1 rounded text-xs"
+        >
+          tutorial
+        </li>
+      </ul>
+    </div>
+  </article>
+</DocumentFragment>
+`;

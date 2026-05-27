@@ -1,11 +1,13 @@
 /**
  * ArticleCard RTL snapshot — fixed sample props (FE-HP-RISK-04 timestamp 안정성).
  */
-import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/react';
+import { describe, it, expect, afterEach } from 'vitest';
+import { render, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ArticleCard } from '../../../src/components/ArticleCard';
 import type { Article } from '@app/shared';
+
+afterEach(() => cleanup());
 
 const sampleArticle: Article = {
   id: 1,
