@@ -1,0 +1,45 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Toast > snapshot — success + error variant 회귀 보호 (#19) > Toast-error 1`] = `
+<DocumentFragment>
+  <div
+    class="fixed bottom-4 right-4 bg-danger-500 text-neutral-0 px-4 py-3 rounded shadow-lg flex items-center gap-3 min-w-[16rem] max-w-md"
+    role="alert"
+  >
+    <span
+      class="flex-1 text-sm"
+    >
+      서버 오류
+    </span>
+    <button
+      aria-label="알림 닫기"
+      class="text-neutral-0 hover:opacity-80 text-lg leading-none"
+      type="button"
+    >
+      ×
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Toast > snapshot — success + error variant 회귀 보호 (#19) > Toast-success 1`] = `
+<DocumentFragment>
+  <div
+    class="fixed bottom-4 right-4 bg-secondary-500 text-neutral-0 px-4 py-3 rounded shadow-lg flex items-center gap-3 min-w-[16rem] max-w-md"
+    role="alert"
+  >
+    <span
+      class="flex-1 text-sm"
+    >
+      저장 완료
+    </span>
+    <button
+      aria-label="알림 닫기"
+      class="text-neutral-0 hover:opacity-80 text-lg leading-none"
+      type="button"
+    >
+      ×
+    </button>
+  </div>
+</DocumentFragment>
+`;
