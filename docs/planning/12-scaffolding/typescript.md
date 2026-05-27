@@ -21,7 +21,7 @@ related:
 |---|---|---|---|
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-design Phase 2/4, ADR-0037 v1.1 + ADR-0038 + ADR-0040 정합) |
 | v0.2 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #5 — §5 smoke 명령을 `pnpm smoke:3profiles` 단일 명령으로 정합 갱신 + §7 부팅 자산 표에 smoke 자동화 행 추가 (LOCAL.md §4 양축 동기). |
-| v0.3 | 2026-05-26 | woosung.ahn@bespinglobal.com | Issue #10 — frontend 골격 실 도입. §5 frontend dev/preview 명령 *실 발현* 시점 (이미 명시되어 있던 명령이 실 동작). §6 환경 변수 표 `VITE_API_URL`·`VITE_APP_TITLE` 정합 (.env.{dev,stg,prod}.example 본 PR 추가). §8 Tailwind solution 실 도입. ADR-0040 양축 동기 (LOCAL.md v0.4). |
+| v0.3 | 2026-05-26 | jungsoobin96@users.noreply.github.com | Issue #10 — frontend 골격 실 도입. §5 frontend dev/preview 명령 *실 발현* 시점 (이미 명시되어 있던 명령이 실 동작). §6 환경 변수 표 `VITE_API_URL`·`VITE_APP_TITLE` 정합 (.env.{dev,stg,prod}.example 본 PR 추가). §8 Tailwind solution 실 도입. ADR-0040 양축 동기 (LOCAL.md v0.4). |
 
 ## 1. 디렉토리 트리
 
