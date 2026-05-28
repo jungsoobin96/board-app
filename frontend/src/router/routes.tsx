@@ -36,14 +36,14 @@ export function matchRoute(pathname: string): MatchResult {
   }
   const articleMatch = /^\/article\/([^/]+)$/.exec(pathname);
   if (articleMatch) {
-    return { name: 'article', params: { id: articleMatch[1] } };
+    return { name: 'article', params: { id: articleMatch[1]! } };
   }
   if (pathname === '/editor') {
     return { name: 'editor', params: {} };
   }
   const editorIdMatch = /^\/editor\/([^/]+)$/.exec(pathname);
   if (editorIdMatch) {
-    return { name: 'editor', params: { id: editorIdMatch[1] } };
+    return { name: 'editor', params: { id: editorIdMatch[1]! } };
   }
   return { name: 'notfound', params: {} };
 }
