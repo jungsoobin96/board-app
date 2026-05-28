@@ -9,6 +9,10 @@ export interface TagRow {
   count: number;
 }
 
+/**
+ * 사용 횟수 기준 인기 태그 fetch — Prisma `_count.articleTags` 내림차순, 상한 limit.
+ * 응답 shape `{name, count}[]`는 09 §3 GET /api/tags 정합.
+ */
 export async function findManyByFrequency(limit: number): Promise<TagRow[]> {
   const rows = await prisma.tag.findMany({
     select: {

@@ -13,6 +13,9 @@ function asyncHandler(
   };
 }
 
+/**
+ * 인기 태그 목록 조회 — service.list 호출, 사용 횟수 내림차순 상위 N개 반환(사이드바 노출용).
+ */
 export const listTagsCtrl: RequestHandler = asyncHandler(async (_req, res) => {
   const result = await service.list();
   res.status(200).json(result);
