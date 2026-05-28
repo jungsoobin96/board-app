@@ -11,12 +11,12 @@
 - **Sprint 3 진행**: 4/4 완료 (#10·#11·#12·#13 모두 머지) — **Sprint 3 100% COMPLETE**
 - **Sprint 4 진행**: 4/4 완료 (#14 PR #42, #15 PR #43, #16 PR #44, #17 PR #45 모두 머지) — **Sprint 4 100% COMPLETE 🎉**
 - **Sprint 5 진행**: 6/N (#47 partial + #51 FULL fix + #52 R-OPS-* + #18 TagList + #19 Snapshot + **#20 PR #62 perf integration 4 시나리오 p95 < 200ms**) / 등록 backlog: #48·#56·#21 (P1)
-- **Sprint 6 진행**: 3/N (#22 PR #65 README + #23 PR #66 한국어 주석 + **#24 PR #(TBD) 최종 골든패스 + 평가 7개**) / 등록 backlog: #25 (P1)
+- **Sprint 6 진행**: 4/N (#22 PR #65 README + #23 PR #66 한국어 주석 + #24 PR #67 최종 골든패스 + 평가 7개 + **#25 PR #(TBD) Open Q 29건 일괄 해소 + 결함 0건 baseline**) — Sprint 6 본 sprint 작업 100% COMPLETE 🎉
 - **Gates**: A=PASS, B=PASS, C=PASS (2026-05-25)
 - **Branch protection**: 미적용 (Sprint 1 follow-up 권고)
 - **`pr-body-checkboxes` status check workflow**: 미등록 (Sprint 1 follow-up 권고)
 - **`sync-issue-labels.yml` 자동 라벨 전이**: ✅ **FULL fix** (PR #53, merge_commit=39bcef1) — H6 가설(GitHub은 신규 personal account의 신규 repo에 대해 owner가 Actions 탭을 직접 방문할 때까지 dispatcher를 silent로 비활성화 = inactive enable) 자연 확정. 5일간 전역 0건 → PR #53 open 즉시 trigger 발생 + 머지 시 추가 trigger. ADR-0029 자동화 완전 회복 — 본 PR 머지 후 이슈 #51 `Closes #51` 자동 close + `status:in-review` 라벨 자동 제거 실측 완료. **issue-pr-title-lint.yml**도 동시 회복 (ADR-0021 정규식 강제). #47 PR #49 H4 fix는 보존(보안 강화 조치 유지)
-- **Currently in review**: **PR #(TBD) — #24 최종 골든패스 + 평가 기준 7개 (Sprint 6 셋째 PR)**
+- **Currently in review**: **PR #(TBD) — #25 Open Q 29건 일괄 해소 + 결함 0건 baseline (Sprint 6 넷째 PR)**
 - **Sprint 4 Follow-up 이슈 후보** (#14·#15·#16·#17 발견, 미등록): (A) pre-existing TS 에러 3건 정정 (`client.ts:18 import.meta.env`, `routes.tsx:39·46 string|undefined`) / (B) dev/stg/prod profile script 신설 (`dev:stg`/`dev:prod` 부족) / (C) RISK-03 deps 문구 정정 (`[data, status]` 권고 vs `[data]` 실제) / (D) Toast portal·queue·stacking (Sprint 5+) / (E) ErrorBoundary Sentry 외부 송신 (별도 ADR)
 - **Sprint 3 Follow-up 이슈 후보** (#10·#11·#12·#13 발견, 미등록): (1) Pretendard self-host / (2) frontend smoke 3 profile / (3) matchRoute trailing slash / (4) frontend/src/index.ts placeholder / (5) Component primitives (Sprint 4) / (6) vite-env.d.ts / (7) request() headers spread / (8) MSW 2.x + vitest jsdom 통합 디버깅 / (9) Home 에러 재시도 버튼 / (10) Pagination ellipsis truncation / (11) formatDate 유틸 분리 (#13 MINOR-01) / (12) seed:dev idempotent 보장 (id 매번 증가)
 - **Sprint 2 Follow-up 이슈 후보** (미등록): (a) asyncHandler 유틸 분리 (3 controller 중복) / (b) tags integration 시드 Promise.all / (c) error-schema afterEach mock 단순화
@@ -24,7 +24,11 @@
 
 ## History (시간 역순)
 
-### 2026-05-28 (Sprint 6 — #24 PR #(TBD) 최종 골든패스 + 평가 기준 7개)
+### 2026-05-28 (Sprint 6 — #25 PR #(TBD) Open Q 29건 일괄 해소 + backend 결함 0건 baseline)
+
+- **PR #(TBD) open** — `fix(backend): 잔여 버그 수정 + Open Questions 해소 (#25)`. Sprint 6 **넷째 PR (4/N) — 본 sprint 작업 100% COMPLETE**. **mode=bug** (ADR-0032 규칙 1 자동 결정, `type:bug` 라벨 명시, 부정 시그널 충돌 0건). docs only PR — backend·frontend·infra 코드/테스트/DB 무변경. **Open Q O-01~O-29 (29건) 일괄 해소** — 분류: ✅ 해소완료 17건 + 🆕 본 PR ADR-0049 결정 2건(O-17 반응형 E2E 단일 시나리오 그룹화 / O-23 모바일 inline 유지) + 🔁 Phase 2 보류 8건(O-04·O-08·O-10·O-11·O-21·O-24·O-27·O-28) + 🔁 중복 2건(O-12·O-22). 산출 6건(01·03·04·05·10·14) §Open Questions 행에 상태 마커 inline 추가 + 변경 이력 v0.X 갱신. ADR-0049 신설(`docs/planning/adr/0049-open-questions-resolution.md`) — Open Q 29건 일괄 결정 ADR(표 형식 1행/O 압축). `bug-residual-and-open-questions-resolve/` 폴더 신설 — 10 docs(brief·contract·plan·eng-review·acceptance·risk·code-review·ai-qa-report + investigation + openq-resolution) 모두 schema validate-doc.sh PASS. **backend 결함 0건 baseline 박음** — investigation.md §6 종합 표 "회귀 191 PASS + 0 FAIL + 결함 마커 grep 0건 = 결함 0건 확정" (backend 단위 64 + 통합 36 + frontend 단위 86+1skip + e2e 5 = 191건, `grep -rnE "TODO|FIXME|BUG|HACK|XXX" backend/src` 0 matches). 재현 절차 7단계 누구나 동일 실행 가능. mode=bug strict rule "회귀 테스트 추가 강제"는 *결함 수정 시* 적용 — 본 PR은 결함 0건이므로 N/A 명시 (investigation §7). 회귀: backend 64 + 통합 36 + frontend 86(+1 skip) + e2e 5 = 191 PASS 그대로 유지. ui_changed=false (docs only). 후속 별 이슈 후보 2건: KPI 완화 ADR(O-28 / #24 attempts.md §8 baseline) / Phase 2 진입 시점 7건 일괄(O-04·08·10·11·21·24·27). 잔여 P1: #48 frontend TS 3건(Sprint 5 이관) + #56 title-lint 정책(Sprint 5 이관) — Sprint 7 또는 별 retro. PR title `fix(backend):` (ADR-0021 정합) + branch `bug/residual-and-open-questions-issue-25` (ADR-0044 정합).
+
+### 2026-05-28 (Sprint 6 — #24 PR #67 최종 골든패스 + 평가 기준 7개)
 
 - **PR #(TBD) open** — `test(docs): 최종 골든패스 + 평가 기준 7개 (#24)`. Sprint 6 **셋째 PR (3/N)**. **mode=add** (ADR-0032 규칙 4 자동 결정, 부정 시그널 0건 — type:test 라벨은 부정 시그널 매핑 외). UC-06 fresh checkout 실증 2회 (저자, 시도 #1 fresh dir 회사 망 SSL inspection 부분 실패 / 시도 #2 작업 트리 부팅 ✅ HTTP 200) + 외부 시도자 #3 머지 후 보강 예정 = **KPI #1 1차 측정 2/10 환경 의존**. RFP §10 평가 기준 7개 1:1 매핑 → **6/7 PASS + 1 N/A (Phase 2 F-13)** (`eval-matrix.md` §8). README §10 Phase 2 향후 확장 절 보강 — F-13 페이지네이션 #1 신규 추가 + 평가 기준 §6 #4 백로그 명시 + `eval-matrix.md` link 추가 (기존 6항목 #1~#6 → #2~#7 후순위 shift). 8 산출 docs(brief·contract·plan·eng-review·acceptance·risk·code-review·ai-qa-report) + 2 부속 docs(attempts·eval-matrix) 모두 schema validate-doc.sh PASS. 회귀: backend 64 + frontend 86(+1 skip) + e2e 5 + 한국어 주석 4 layer 100% + 3 profile boot PASS (dev 68/stg 162/prod 200ms). ui_changed=false (docs only). pre-existing #48 frontend 3 TS error는 baseline 재현 — 본 PR 무관 회귀 0. 후속 별 이슈 후보 4건: F-13 구현 / KPI #1 완화 ADR / README SSL inspection 트러블슈팅 / #48 (이미 OPEN). PR title `test(docs):` (ADR-0021 정합) + branch `feat/final-golden-path-eval-issue-24` (ADR-0044 정합). Sprint 6 P0 3건 완료 — 잔여는 #25 (P1, 잔여 버그 + Open Questions).
 
