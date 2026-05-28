@@ -1,9 +1,9 @@
 ---
 doc_type: srs
-version: v0.2
+version: v0.3
 status: Accepted
 author: jungsoobin96@users.noreply.github.com
-date: 2026-05-27
+date: 2026-05-28
 gate: B
 related:
   R-ID: [R-F-01, R-F-02, R-F-03, R-F-04, R-F-05, R-F-06, R-F-07, R-F-08, R-N-01, R-N-02, R-N-03, R-N-04, R-N-05, R-N-06, R-N-07, R-OPS-AUTO-LABEL, R-OPS-SMOKE, R-OPS-WORKFLOW, R-OPS-DOCS-SYNC]
@@ -19,6 +19,7 @@ related:
 
 | Version | Date | Author | Change |
 |---|---|---|---|
+| v0.3 | 2026-05-28 | jungsoobin96@users.noreply.github.com | §6 Open Q O-10~O-14 ADR-0049 마커 (#25) |
 | v0.2 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #52 — §3 비기능에 **R-OPS-* 운영 비기능 R-ID 체계 신설** (4건: R-OPS-AUTO-LABEL/SMOKE/WORKFLOW/DOCS-SYNC). #47·#51에서 ad-hoc 워크어라운드로 사용한 `R-OPS-AUTO-LABEL`을 정본 등록 + 인접 3건(SMOKE/WORKFLOW/DOCS-SYNC) 동시 도입. ADR-0029/0037 v1.1/0040/0047 매핑. frontmatter status Draft → Accepted, related.R-ID에 R-F-*/R-N-* + R-OPS-* 일괄 등록. ADR-0002 mod-r-ops-r-id-taxonomy 신설. |
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-init Phase 1, RFP §3·§5·§6 기반) |
 
@@ -388,8 +389,10 @@ ArticleTag {
 
 ## 6. Open Questions
 
-- O-10: 페이지네이션 limit의 상한 (기본 10, 최대 50?) — 12 Test Design에서 확정.
-- O-11: 글 정렬 옵션 (최신순 외 인기순?) — MVP 미포함, Phase 2 후보.
-- O-12: 인기 태그 영역 상한(R-F-04) — 20개 권장 + 옵션 노출.
-- O-13: TypeScript strict 모드 적용 범위 — 09 Coding Conventions에서 확정.
-- O-14: 12 Test Design에서 단위/통합/E2E 도구 — Vitest + Supertest + Playwright 후보.
+> [ADR-0049 Sprint 6 #25 일괄 해소] 본 §의 O-10~O-14 5건 결정 trace는 [`docs/planning/adr/0049-open-questions-resolution.md`](../adr/0049-open-questions-resolution.md) + [`bug-residual-and-open-questions-resolve.openq-resolution.md`](../../features/bug-residual-and-open-questions-resolve/bug-residual-and-open-questions-resolve.openq-resolution.md) §8 참조.
+
+- O-10: 페이지네이션 limit의 상한 (기본 10, 최대 50?) — 12 Test Design에서 확정. **🔁 Phase 2 보류** (F-13 자체가 Phase 2, README §10 #1)
+- O-11: 글 정렬 옵션 (최신순 외 인기순?) — MVP 미포함, Phase 2 후보. **🔁 Phase 2 보류** (인기순은 후속)
+- O-12: 인기 태그 영역 상한(R-F-04) — 20개 권장 + 옵션 노출. **🔁 중복** (O-07/O-15와 동일 결정, 20개 고정)
+- O-13: TypeScript strict 모드 적용 범위 — 09 Coding Conventions에서 확정. **✅ 해소완료** (strict: true 전수, 11-coding-conventions §2)
+- O-14: 12 Test Design에서 단위/통합/E2E 도구 — Vitest + Supertest + Playwright 후보. **✅ 해소완료** (3종 모두 채택, 12-scaffolding §3)

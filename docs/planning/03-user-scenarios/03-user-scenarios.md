@@ -1,9 +1,9 @@
 ---
 doc_type: user-scenarios
-version: v0.1 (Draft)
+version: v0.2 (Draft)
 status: Draft
 author: woosung.ahn@bespinglobal.com
-date: 2026-05-22
+date: 2026-05-28
 gate: B
 related:
   R-ID: []
@@ -19,6 +19,7 @@ related:
 
 | Version | Date | Author | Change |
 |---|---|---|---|
+| v0.2 | 2026-05-28 | jungsoobin96 | §5 Open Q O-06~O-09 ADR-0049 마커 (#25) |
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-init Phase 1, RFP §3·§4·§10 기반) |
 
 ## 1. 페르소나
@@ -171,7 +172,9 @@ related:
 
 ## 5. Open Questions
 
-- O-06: 댓글 수정 기능을 *완전 제외*할 것인가, Phase 2 후보로 둘 것인가? (RFP §3.2: "수정 기능은 없음" — 본 MVP 확정)
-- O-07: 인기 태그 영역 노출 개수 상한 — 기본 20개 권장. 04 SRS R-F-04에서 확정.
-- O-08: 본인 글 수정/삭제 권한 체크(Phase 2)와 MVP의 "모두 수정 가능" 사이 UX 안내 문구.
-- O-09: gstack `/qa` 골든 패스 시나리오를 본 문서의 UC-01~UC-06 어디까지 자동화할지 — 12 Test Design에서 결정.
+> [ADR-0049 Sprint 6 #25 일괄 해소] 본 §의 O-06~O-09 4건 결정 trace는 [`docs/planning/adr/0049-open-questions-resolution.md`](../adr/0049-open-questions-resolution.md) + [`bug-residual-and-open-questions-resolve.openq-resolution.md`](../../features/bug-residual-and-open-questions-resolve/bug-residual-and-open-questions-resolve.openq-resolution.md) §8 참조.
+
+- O-06: 댓글 수정 기능을 *완전 제외*할 것인가, Phase 2 후보로 둘 것인가? (RFP §3.2: "수정 기능은 없음" — 본 MVP 확정) **✅ 해소완료** (MVP 완전 제외, 04 SRS 정합)
+- O-07: 인기 태그 영역 노출 개수 상한 — 기본 20개 권장. 04 SRS R-F-04에서 확정. **✅ 해소완료** (20개 고정, 04 SRS R-F-04)
+- O-08: 본인 글 수정/삭제 권한 체크(Phase 2)와 MVP의 "모두 수정 가능" 사이 UX 안내 문구. **🔁 Phase 2 보류** (MVP "모두 수정 가능" + README §10 #2 백로그)
+- O-09: gstack `/qa` 골든 패스 시나리오를 본 문서의 UC-01~UC-06 어디까지 자동화할지 — 12 Test Design에서 결정. **✅ 해소완료** (UC-01~UC-06 전수, 13-test-design + e2e/specs 5건)

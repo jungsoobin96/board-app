@@ -1,9 +1,9 @@
 ---
 doc_type: wbs
-version: v0.1 (Draft)
+version: v0.2 (Draft)
 status: Draft
 author: woosung.ahn@bespinglobal.com
-date: 2026-05-22
+date: 2026-05-28
 gate: operations
 related:
   R-ID: [R-F-01, R-F-02, R-F-03, R-F-04, R-F-05, R-F-06, R-F-07, R-F-08, R-N-01, R-N-02, R-N-03, R-N-04, R-N-05, R-N-06, R-N-07]
@@ -19,6 +19,7 @@ related:
 
 | Version | Date | Author | Change |
 |---|---|---|---|
+| v0.2 | 2026-05-28 | jungsoobin96 | §8 Open Q O-25~O-29 ADR-0049 마커 (#25) |
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-wbs Phase 3/4) |
 
 ## 0. 개요
@@ -1939,8 +1940,10 @@ sprints:
 
 ## 8. Open Questions
 
-- O-25: Sprint 5 / test-e2e-golden-path에서 Playwright 도입 비용 vs gstack `/qa` 단독 — 본 MVP에서 Playwright 학습 부담이 입문자에게 너무 크면 gstack 단독으로 완화 ADR 검토.
-- O-26: Sprint 6 / docs-readme-write의 §평가 기준 매핑 표 — RFP §10 7항목과 02-catalog E2E 시나리오를 1:1 vs 그룹화 (05 Open Q O-19).
-- O-27: Sprint 1 / chore-3profile-smoke의 `pnpm smoke:3profiles`를 GitHub Actions에 포함할지 — CI 시간 부담 vs 회귀 가치 trade-off.
-- O-28: KPI 완화 ADR (RISK-07) — "10명 시도 100%"를 "3명 시도 100% + 외부 비동기 시도 7명" 등으로 재정의할지.
-- O-29: bug-residual-and-open-questions-resolve(Sprint 6 마지막)에서 Open Q 해소 결과를 별 ADR로 묶을지 산출별로 분산할지.
+> [ADR-0049 Sprint 6 #25 일괄 해소] 본 §의 O-25~O-29 5건 결정 trace는 [`docs/planning/adr/0049-open-questions-resolution.md`](../adr/0049-open-questions-resolution.md) + [`bug-residual-and-open-questions-resolve.openq-resolution.md`](../../features/bug-residual-and-open-questions-resolve/bug-residual-and-open-questions-resolve.openq-resolution.md) §8 참조.
+
+- O-25: Sprint 5 / test-e2e-golden-path에서 Playwright 도입 비용 vs gstack `/qa` 단독 — 본 MVP에서 Playwright 학습 부담이 입문자에게 너무 크면 gstack 단독으로 완화 ADR 검토. **✅ 해소완료** (Playwright 채택, Sprint 5 #21)
+- O-26: Sprint 6 / docs-readme-write의 §평가 기준 매핑 표 — RFP §10 7항목과 02-catalog E2E 시나리오를 1:1 vs 그룹화 (05 Open Q O-19). **✅ 해소완료** (1:1, Sprint 6 #24 eval-matrix.md)
+- O-27: Sprint 1 / chore-3profile-smoke의 `pnpm smoke:3profiles`를 GitHub Actions에 포함할지 — CI 시간 부담 vs 회귀 가치 trade-off. **🔁 Phase 2 보류**
+- O-28: KPI 완화 ADR (RISK-07) — "10명 시도 100%"를 "3명 시도 100% + 외부 비동기 시도 7명" 등으로 재정의할지. **🔁 Phase 2 보류** (별 이슈 후속, #24 attempts.md §8 N=2/10 baseline)
+- O-29: bug-residual-and-open-questions-resolve(Sprint 6 마지막)에서 Open Q 해소 결과를 별 ADR로 묶을지 산출별로 분산할지. **✅ 해소완료** (묶음 ADR-0049, 본 PR)

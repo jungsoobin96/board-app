@@ -1,9 +1,9 @@
 ---
 doc_type: screen-design
-version: v0.1 (Draft)
+version: v0.2 (Draft)
 status: Draft
 author: woosung.ahn@bespinglobal.com
-date: 2026-05-22
+date: 2026-05-28
 gate: C
 related:
   R-ID: [R-F-01, R-F-02, R-F-03, R-F-04, R-F-05, R-F-06, R-F-07, R-F-08, R-N-06]
@@ -19,6 +19,7 @@ related:
 
 | Version | Date | Author | Change |
 |---|---|---|---|
+| v0.2 | 2026-05-28 | jungsoobin96 | §5 Open Q O-20~O-24 ADR-0049 마커 (#25) |
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-design Phase 2/4) |
 
 ## 1. 화면 인벤토리
@@ -212,8 +213,10 @@ related:
 
 ## 5. Open Questions
 
-- O-20: Pretendard 폰트 self-host vs CDN — README 재현성과 첫 페이지 LCP 영향 검토 (12-scaffolding §1·§7에서 확정).
-- O-21: 다크 모드 토큰 제공 여부 — MVP 미적용, Phase 2 후보.
-- O-22: 사이드바 "인기 태그" 상한 사용자 옵션화 — 본 MVP는 서버 고정 20개 (O-15).
-- O-23: 모바일에서 "수정/삭제" 버튼을 inline vs 더보기 메뉴 중 어느 쪽으로 둘지.
-- O-24: gstack `/qa` 토큰 회귀 검증 — 토큰 변경 시 스크린샷 diff 자동화 여부 (13 Test Design 03-regression에서 결정).
+> [ADR-0049 Sprint 6 #25 일괄 해소] 본 §의 O-20~O-24 5건 결정 trace는 [`docs/planning/adr/0049-open-questions-resolution.md`](../adr/0049-open-questions-resolution.md) + [`bug-residual-and-open-questions-resolve.openq-resolution.md`](../../features/bug-residual-and-open-questions-resolve/bug-residual-and-open-questions-resolve.openq-resolution.md) §8 참조.
+
+- O-20: Pretendard 폰트 self-host vs CDN — README 재현성과 첫 페이지 LCP 영향 검토 (12-scaffolding §1·§7에서 확정). **✅ 해소완료** (CDN 채택, MVP 학습 우선)
+- O-21: 다크 모드 토큰 제공 여부 — MVP 미적용, Phase 2 후보. **🔁 Phase 2 보류**
+- O-22: 사이드바 "인기 태그" 상한 사용자 옵션화 — 본 MVP는 서버 고정 20개 (O-15). **🔁 중복** (O-15와 동일)
+- O-23: 모바일에서 "수정/삭제" 버튼을 inline vs 더보기 메뉴 중 어느 쪽으로 둘지. **🆕 본 PR ADR-0049 결정** (inline 유지, §1.2 정합)
+- O-24: gstack `/qa` 토큰 회귀 검증 — 토큰 변경 시 스크린샷 diff 자동화 여부 (13 Test Design 03-regression에서 결정). **🔁 Phase 2 보류** (다크모드 도입 시 함께, O-21 의존)

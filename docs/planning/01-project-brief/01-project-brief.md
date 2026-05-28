@@ -1,9 +1,9 @@
 ---
 doc_type: brief
-version: v0.1 (Draft)
+version: v0.2 (Draft)
 status: Draft
 author: woosung.ahn@bespinglobal.com
-date: 2026-05-22
+date: 2026-05-28
 gate: A
 related:
   R-ID: []
@@ -19,6 +19,7 @@ related:
 
 | Version | Date | Author | Change |
 |---|---|---|---|
+| v0.2 | 2026-05-28 | jungsoobin96 | §8 Open Q O-01~O-05 ADR-0049 마커 (#25) |
 | v0.1 | 2026-05-22 | woosung.ahn@bespinglobal.com | 초안 (flow-init Phase 1, RFP 기반 의도 응축) |
 
 ## 1. 한 줄 정의
@@ -78,8 +79,10 @@ related:
 
 ## 8. Open Questions
 
-- O-01: 기술 스택 — React+Vite vs 순수 HTML/JS 중 권장 1택을 02 Feasibility에서 확정한다.
-- O-02: 언어 — JavaScript 우선 vs TypeScript 도전 옵션 — 학습 친화성과 타입 안전 사이 균형.
-- O-03: ORM — Prisma vs better-sqlite3 직접 사용 — 학습 곡선 vs 마법성.
-- O-04: 동시 데모 시나리오 인정 여부 — SQLite WAL 모드 적용 vs 단일 인스턴스 가이드.
-- O-05: 학습 친화성 KPI(주석 커버리지 ≥80%)의 측정 도구 — 수동 vs 자동 grep 룰.
+> [ADR-0049 Sprint 6 #25 일괄 해소] 본 §의 O-01~O-05 5건은 모두 ✅ 해소완료. 결정 trace는 [`docs/planning/adr/0049-open-questions-resolution.md`](../adr/0049-open-questions-resolution.md) + [`docs/features/bug-residual-and-open-questions-resolve/bug-residual-and-open-questions-resolve.openq-resolution.md`](../../features/bug-residual-and-open-questions-resolve/bug-residual-and-open-questions-resolve.openq-resolution.md) §8 참조.
+
+- O-01: 기술 스택 — React+Vite vs 순수 HTML/JS 중 권장 1택을 02 Feasibility에서 확정한다. **✅ 해소완료** (React+Vite 채택, 02 Feasibility §"Decision")
+- O-02: 언어 — JavaScript 우선 vs TypeScript 도전 옵션 — 학습 친화성과 타입 안전 사이 균형. **✅ 해소완료** (TypeScript 채택, 11-coding-conventions §1)
+- O-03: ORM — Prisma vs better-sqlite3 직접 사용 — 학습 곡선 vs 마법성. **✅ 해소완료** (Prisma 채택, 08-lld-module-spec + backend/prisma)
+- O-04: 동시 데모 시나리오 인정 여부 — SQLite WAL 모드 적용 vs 단일 인스턴스 가이드. **🔁 Phase 2 보류** (MVP 단일 인스턴스)
+- O-05: 학습 친화성 KPI(주석 커버리지 ≥80%)의 측정 도구 — 수동 vs 자동 grep 룰. **✅ 해소완료** (grep 자동, Sprint 6 #23)
