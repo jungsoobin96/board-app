@@ -10,6 +10,10 @@ interface LayoutProps {
   children: ReactNode;
 }
 
+/**
+ * 페이지 공통 레이아웃 — 헤더(로고·새 글 버튼) + main 콘텐츠 영역.
+ * `<header>`·`<nav>`·`<main>` 시맨틱 + 최대폭 + 가운데 정렬 (10 §4 a11y 정합).
+ */
 export const Layout = ({ children }: LayoutProps): JSX.Element => (
   <div className="min-h-screen bg-neutral-0 text-neutral-700">
     <header className="border-b border-neutral-300 bg-neutral-0">

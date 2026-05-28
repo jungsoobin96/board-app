@@ -25,6 +25,10 @@ export interface ConfirmModalProps {
   onCancel: () => void;
 }
 
+/**
+ * 재사용 확인 다이얼로그 — controlled. role="dialog" + aria-modal + focus trap + ESC 닫기.
+ * 호출자가 open·isPending·error 상태와 onConfirm/onCancel 핸들러 관리 (try/catch 미수행).
+ */
 export const ConfirmModal = ({
   open,
   title,

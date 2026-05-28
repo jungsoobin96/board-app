@@ -11,6 +11,10 @@ interface Props {
   onTagClick: (name: string | null) => void;
 }
 
+/**
+ * 인기 태그 칩 목록 (사이드바) — 선택 태그 강조 + 필터 해제 버튼.
+ * 클릭 시 onTagClick(name|null) 호출 — 호출처가 URL 쿼리 갱신 책임.
+ */
 export const TagList = ({ tags, selectedTag, onTagClick }: Props): JSX.Element => (
   <aside aria-label="인기 태그" className="border border-neutral-300 rounded p-4">
     <h2 className="text-base font-semibold text-neutral-900 mb-3">인기 태그</h2>

@@ -11,17 +11,22 @@
 - **Sprint 3 진행**: 4/4 완료 (#10·#11·#12·#13 모두 머지) — **Sprint 3 100% COMPLETE**
 - **Sprint 4 진행**: 4/4 완료 (#14 PR #42, #15 PR #43, #16 PR #44, #17 PR #45 모두 머지) — **Sprint 4 100% COMPLETE 🎉**
 - **Sprint 5 진행**: 6/N (#47 partial + #51 FULL fix + #52 R-OPS-* + #18 TagList + #19 Snapshot + **#20 PR #62 perf integration 4 시나리오 p95 < 200ms**) / 등록 backlog: #48·#56·#21 (P1)
+- **Sprint 6 진행**: 2/N (#22 PR #65 README + **#23 PR #66 한국어 주석 ≥80% + 측정 스크립트**) / 등록 backlog: #24·#25 (P0/P1)
 - **Gates**: A=PASS, B=PASS, C=PASS (2026-05-25)
 - **Branch protection**: 미적용 (Sprint 1 follow-up 권고)
 - **`pr-body-checkboxes` status check workflow**: 미등록 (Sprint 1 follow-up 권고)
 - **`sync-issue-labels.yml` 자동 라벨 전이**: ✅ **FULL fix** (PR #53, merge_commit=39bcef1) — H6 가설(GitHub은 신규 personal account의 신규 repo에 대해 owner가 Actions 탭을 직접 방문할 때까지 dispatcher를 silent로 비활성화 = inactive enable) 자연 확정. 5일간 전역 0건 → PR #53 open 즉시 trigger 발생 + 머지 시 추가 trigger. ADR-0029 자동화 완전 회복 — 본 PR 머지 후 이슈 #51 `Closes #51` 자동 close + `status:in-review` 라벨 자동 제거 실측 완료. **issue-pr-title-lint.yml**도 동시 회복 (ADR-0021 정규식 강제). #47 PR #49 H4 fix는 보존(보안 강화 조치 유지)
-- **Currently in review**: 없음
+- **Currently in review**: **PR #66 — #23 한국어 주석 ≥80% + 측정 스크립트 (Sprint 6 둘째 PR)**
 - **Sprint 4 Follow-up 이슈 후보** (#14·#15·#16·#17 발견, 미등록): (A) pre-existing TS 에러 3건 정정 (`client.ts:18 import.meta.env`, `routes.tsx:39·46 string|undefined`) / (B) dev/stg/prod profile script 신설 (`dev:stg`/`dev:prod` 부족) / (C) RISK-03 deps 문구 정정 (`[data, status]` 권고 vs `[data]` 실제) / (D) Toast portal·queue·stacking (Sprint 5+) / (E) ErrorBoundary Sentry 외부 송신 (별도 ADR)
 - **Sprint 3 Follow-up 이슈 후보** (#10·#11·#12·#13 발견, 미등록): (1) Pretendard self-host / (2) frontend smoke 3 profile / (3) matchRoute trailing slash / (4) frontend/src/index.ts placeholder / (5) Component primitives (Sprint 4) / (6) vite-env.d.ts / (7) request() headers spread / (8) MSW 2.x + vitest jsdom 통합 디버깅 / (9) Home 에러 재시도 버튼 / (10) Pagination ellipsis truncation / (11) formatDate 유틸 분리 (#13 MINOR-01) / (12) seed:dev idempotent 보장 (id 매번 증가)
 - **Sprint 2 Follow-up 이슈 후보** (미등록): (a) asyncHandler 유틸 분리 (3 controller 중복) / (b) tags integration 시드 Promise.all / (c) error-schema afterEach mock 단순화
 - **Sprint 1 Follow-up 이슈 후보** (미등록): (i) CI smoke job 신설 / (ii) pollReady fetch body 명시 cancel / (iii) engines `>=20.11.0` 정정 / (iv) GitHub Actions workflows 0 runs + sync-issue-labels.yml / (v) 13/02-catalog F-12 fan-in (Sprint 6)
 
 ## History (시간 역순)
+
+### 2026-05-28 (Sprint 6 — #23 PR #66 한국어 주석 ≥80% + 측정 스크립트)
+
+- **PR #66 open** — `docs(docs): 한국어 주석 보강 + 측정 스크립트 (#23)`. Sprint 6 **둘째 PR (2/N)**. **mode=add** (ADR-0032 규칙 4 자동 결정, 부정 시그널 0건). `scripts/check-comment-coverage.sh` 신설 (POSIX bash + grep, 243 line) — R-N-05 / F-10 "핵심 4 layer 한국어 주석 ≥ 80%"를 *정적 측정 가능*하게 자동화. O-16 (05-prd) 해소. backend/src/{controllers,services,repositories} 9 파일 + frontend/src/components 9 파일 = 18 파일 JSDoc `/** 한국어 의도 */` 추가 (11-coding-conventions §4 정합). 측정 결과: 4 layer 모두 **100% PASS** (controllers 9/9·services 11/11·repositories 13/13·components 9/9, 누락 0건). 회귀: backend 64 tests PASS + frontend 86 tests PASS + 3 profile boot PASS (dev 36ms / stg 158ms / prod 239ms). 8 산출 docs(brief·contract·plan·eng-review·acceptance·risk·code-review·ai-qa-report) 모두 schema validate-doc.sh PASS. ui_changed=false (주석은 렌더링 영향 0, snapshot 무변경). pre-existing #48 frontend 3 TS error는 baseline에서 동일 재현 → 본 PR 무관 회귀 0. 측정 단위 결정: O-23-1 함수 헤더 JSDoc only / O-23-2 export const+function+default function / O-23-3 CI lint job 본 PR scope 밖 (별 이슈 후속 가능). 4 commits DAG: C1 스크립트 / C2 backend / C3 frontend / C4 docs. PR title `docs(docs):` (ADR-0021 정합) + branch `feat/korean-comments-coverage-issue-23` (ADR-0044 정합). #24 (test-final-golden-path) Blocks 관계 — 본 PR 머지 시 #24 status:blocked → status:todo 자동 전이 예상.
 
 ### 2026-05-28 (Sprint 5 — #20 PR #62 perf integration p95 측정)
 

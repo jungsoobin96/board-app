@@ -14,6 +14,10 @@ interface ToastProps {
   durationMs?: number | null;
 }
 
+/**
+ * 토스트 알림 — success/error variant + 자동 dismiss + 수동 닫기 버튼.
+ * R-N-02 정합: message는 string 전용 (Error 객체·stack 노출 차단, 호출자가 NormalizedError.message 추출).
+ */
 export const Toast = ({
   variant,
   message,

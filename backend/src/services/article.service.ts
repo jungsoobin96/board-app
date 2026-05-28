@@ -18,6 +18,10 @@ export interface ListResultDto {
   limit: number;
 }
 
+/**
+ * 태그 입력 정규화 — trim·소문자화·중복 제거·빈 토큰 무시.
+ * 동일 태그가 대소문자 다르게 들어와도 1건으로 통합한다 (예: "JS", "js" → "js").
+ */
 export function normalizeTags(input: string[]): string[] {
   const seen = new Set<string>();
   const result: string[] = [];
@@ -38,6 +42,10 @@ export function withTransaction<T>(
   return prisma.$transaction(callback);
 }
 
+/**
+ * 글 목록 조회 — page·limit·tag 조건으로 repository에서 fetch하고 메타(total·page·limit) 묶어 반환.
+ * 페이지네이션 정책은 controller·repository가 분담 (service는 위임만).
+ */
 export async function list(args: {
   page: number;
   limit: number;
@@ -47,6 +55,9 @@ export async function list(args: {
   return { articles: rows, total, page: args.page, limit: args.limit };
 }
 
+/**
+ * 단건 글 조회 — 미존재 시 NOT_FOUND_ARTICLE NotFoundError throw (R-N-02 정합).
+ */
 export async function get(id: number): Promise<ArticleRow> {
   const row = await repo.findById(id);
   if (!row) {
@@ -62,6 +73,10 @@ export interface CreateInput {
   tagList: string[];
 }
 
+/**
+ * 신규 글 생성 — 태그 정규화 → 트랜잭션 내에서 article insert + tag upsert + 연결 처리.
+ * 트랜잭션 보장으로 글·태그 연결의 부분 실패 방지. 생성 직후 findById로 fetch해 row 반환.
+ */
 export async function create(input: CreateInput): Promise<ArticleRow> {
   const tags = normalizeTags(input.tagList);
   const newId = await withTransaction(async (tx) => {
@@ -87,6 +102,10 @@ export async function create(input: CreateInput): Promise<ArticleRow> {
   return row;
 }
 
+/**
+ * 글 수정 — 존재 확인 후 트랜잭션 내에서 본문 update + 기존 태그 unlink + 새 태그 upsert/link.
+ * 태그 교체 시 referential integrity 보장. 글 미존재 시 NOT_FOUND_ARTICLE throw.
+ */
 export async function update(id: number, input: CreateInput): Promise<ArticleRow> {
   const existing = await repo.findById(id);
   if (!existing) {
@@ -116,6 +135,10 @@ export async function update(id: number, input: CreateInput): Promise<ArticleRow
   return row;
 }
 
+/**
+ * 글 삭제 — 존재 확인 후 repository.deleteArticle 호출.
+ * 연관 댓글·태그 연결은 Prisma cascade로 처리 (08-lld §M8 정합).
+ */
 export async function remove(id: number): Promise<void> {
   const existing = await repo.findById(id);
   if (!existing) {
