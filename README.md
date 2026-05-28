@@ -146,14 +146,15 @@ winget install MikeFarah.yq
 
 본 v1 완성 후 단계적으로 추가하기 좋은 기능:
 
-1. **세션 기반 간단 로그인** (bcrypt + express-session)
-2. **본인 글만 수정/삭제** (권한 체크)
-3. **프로필 페이지** (사용자별 작성 글 모아 보기)
-4. **JWT 인증으로 전환** (현대적 인증 방식 학습)
-5. **팔로우 / 언팔로우 + 개인화 피드**
-6. **즐겨찾기(Favorite)**
+1. **글 목록 페이지네이션 (F-13)** — `?page=N&limit=M` 쿼리 + UI 페이지 칩. 평가 기준 §6 #4 백로그.
+2. **세션 기반 간단 로그인** (bcrypt + express-session)
+3. **본인 글만 수정/삭제** (권한 체크)
+4. **프로필 페이지** (사용자별 작성 글 모아 보기)
+5. **JWT 인증으로 전환** (현대적 인증 방식 학습)
+6. **팔로우 / 언팔로우 + 개인화 피드**
+7. **즐겨찾기(Favorite)**
 
-상세 단계별 학습 포인트는 [`RFP.md`](RFP.md) §11 참조.
+상세 단계별 학습 포인트는 [`RFP.md`](RFP.md) §11 참조. 본 v1의 평가 기준 7개 1:1 결과(6/7 PASS + 1 N/A)는 [`docs/features/feat-final-golden-path-eval/feat-final-golden-path-eval.eval-matrix.md`](docs/features/feat-final-golden-path-eval/feat-final-golden-path-eval.eval-matrix.md) §8 참조.
 
 ---
 
