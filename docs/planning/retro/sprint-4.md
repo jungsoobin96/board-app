@@ -75,6 +75,7 @@ related:
 | A. Derived | R-OPS-* 운영 비기능 R-ID 체계 신설 + 04-srs §3 정식 등록 | **Sprint 5 #52 PR #55 머지 완료** (merge_commit=43e26a0). ADR-0002 + 4건(AUTO-LABEL/SMOKE/WORKFLOW/DOCS-SYNC) + 13/02-catalog fan-in. #47/#51 ad-hoc 우회 정합 회복 |
 | (정규) Sprint 5 | #18 태그 필터 UX 마무리 + URL state | **Sprint 5 #18 PR #58 머지 완료** (merge_commit=1f27461). TagList active 재클릭 해제 toggle 1줄 + RTL +2 (85 passed). URL state는 Sprint 3 #12에서 이미 구현, 본 PR은 toggle UX 마무리. ui_changed=false 사용자 override. #51/#52 회복 후 자연 회귀 확정 |
 | (정규) Sprint 5 | #19 Snapshot 5종 + 토큰 회귀 (scope 축소) | **Sprint 5 #19 PR #60 머지 완료** (merge_commit=c2d770e). Toast snapshot it +1 (2 sub-snap) → snapshot 4종 → **5종**. 단위 85 → 86 passed. **scope 축소 사용자 (C) 결정** — viewport 4×5 + Playwright + gstack qa + 스크린샷은 #21 이관. ui_changed=false |
+| (정규) Sprint 5 | #20 응답 시간 측정 통합 (p95 < 200ms) | **Sprint 5 #20 PR #62 머지 완료** (merge_commit=5b37fba). perf.integration.test.ts 신설 — 4 시나리오 × 100회 + performance.now() + percentile(p95) + 결과 JSON + WARN(BLOCK X). 실측 4건 모두 p95 < 50ms. 통합 24 → 25 passed. R-N-01 추적성 기반선. ui_changed=false |
 | A. Derived | frontend `dev:prod` script 신설 + backend 정합 (ADR-0037 N/A 해소) | Sprint 5 follow-up |
 | A. Derived | RISK-03 deps 문구 정정 (`[data, status]` 권고 vs `[data]` 실제) | Sprint 5 follow-up (minor doc fix) |
 | A. Derived | Toast portal·queue·stacking (Sprint 5+) | Sprint 5 또는 Sprint 6 backlog |
