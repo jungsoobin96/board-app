@@ -29,6 +29,10 @@ function validate(body: string, author: string): FieldErrors {
   return errors;
 }
 
+/**
+ * 댓글 작성 폼 — body·author controlled state + inline 검증 + onSubmit 위임.
+ * submit 성공 시 body만 reset (author는 유지 — 연속 작성 UX). 실패 시 alert + 입력값 보존.
+ */
 export const CommentForm = ({ onSubmit }: CommentFormProps): JSX.Element => {
   const titleId = useId();
   const bodyId = useId();

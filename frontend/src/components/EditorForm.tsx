@@ -60,6 +60,10 @@ function parseTagList(input: string): string[] {
   return Array.from(new Set(tokens));
 }
 
+/**
+ * 글 작성·수정 폼 — controlled state(title·body·author·tagList) + inline 검증 + onSubmit 위임.
+ * 생성·수정 두 모드를 initialValues + submitLabel prop으로 분기. 태그는 쉼표 구분 입력 → 정규화 배열.
+ */
 export const EditorForm = ({
   initialValues,
   submitLabel,

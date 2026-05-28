@@ -10,6 +10,10 @@ interface Props {
   onPageChange: (page: number) => void;
 }
 
+/**
+ * 페이지네이션 — `< 1 [2] 3 >` 네비게이션. 총 페이지 1 이하면 null 반환(노출 안 함).
+ * 클릭 시 onPageChange(page) 호출 — 호출처가 URL 갱신 책임.
+ */
 export const Pagination = ({ page, total, limit, onPageChange }: Props): JSX.Element | null => {
   const totalPages = Math.ceil(total / limit);
   if (totalPages <= 1) return null;

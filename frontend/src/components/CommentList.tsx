@@ -10,6 +10,10 @@ interface Props {
   onDelete?: (commentId: number) => void;
 }
 
+/**
+ * 댓글 N건 목록 — 빈 케이스 inline 메시지 노출.
+ * `onDelete` prop 주어지면 각 댓글에 "삭제" 버튼 렌더 (페이지 컴포넌트가 권한 정책 결정).
+ */
 export const CommentList = ({ comments, onDelete }: Props): JSX.Element => (
   <section aria-label="댓글" className="mt-8">
     <h2 className="text-xl font-semibold text-neutral-900 mb-4">
