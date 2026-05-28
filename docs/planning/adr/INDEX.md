@@ -1,9 +1,9 @@
 ---
 doc_type: index
-version: v0.2
+version: v0.3
 status: Accepted
 author: jungsoobin96@users.noreply.github.com
-date: 2026-05-27
+date: 2026-05-28
 gate: operations
 related:
   R-ID: []
@@ -21,6 +21,7 @@ related:
 
 | Version | Date | Author | Change |
 |---|---|---|---|
+| v0.3 | 2026-05-28 | jungsoobin96@users.noreply.github.com | Issue #56 — ADR-0003 title-lint-and-branch-prefix-separation 등록 (workflow regex 9 type 확장 + §A·§B·§C 어휘 분리 명문화). |
 | v0.2 | 2026-05-27 | jungsoobin96@users.noreply.github.com | Issue #52 — ADR-0002 mod-r-ops-r-id-taxonomy 등록 (R-OPS-* 운영 비기능 R-ID prefix 체계 신설). 04-srs §3 정식 등록 + 13-catalog fan-in 동기. |
 | v0.1 | 2026-05-25 | woosung.ahn@bespinglobal.com | 초안 — 1수준 폴더 신설 + 0001 toolkit-adoption 등록 (게이트 C 회귀 보강) |
 
@@ -30,6 +31,7 @@ related:
 |---|---|---|---|
 | [0001](0001-toolkit-adoption.md) | agent-toolkit 도입 + board-app 정합 결정 | Accepted | 2026-05-22 |
 | [0002](0002-mod-r-ops-r-id-taxonomy.md) | R-OPS-* 운영 비기능 R-ID prefix 체계 신설 | Accepted | 2026-05-27 |
+| [0003](0003-title-lint-and-branch-prefix-separation.md) | Title-lint regex 9 type 확장 + branch prefix와 PR title type의 의도적 분리 | Accepted | 2026-05-28 |
 
 ## toolkit 측 참조 ADR (정본 = agent-toolkit, 본 프로젝트 본문 인용)
 
