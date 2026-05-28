@@ -1,6 +1,6 @@
-# 이슈/PR 제목 명명 규칙 강제 (ADR-0021)
-# 정규식: ^(feat|fix|chore|docs|test|refactor)\([a-z][a-z0-9,_-]*\): .+$
-# 정본: docs/planning/policies/github-issue.md §1.5
+# 이슈/PR 제목 명명 규칙 강제 (ADR-0021 + ADR-0003)
+# 정규식: ^(feat|fix|mod|docs|chore|refactor|test|perf|style)\([a-z][a-z0-9,_-]*\): .+$
+# 정본: docs/planning/policies/branch-strategy.md §3.2 (commit message type 9종) + docs/planning/adr/0003-*.md
 # 사용자 가이드: docs/install/github-issue-guide.md §1.1
 name: issue-pr-title-lint
 
@@ -26,7 +26,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -u
-          REGEX='^(feat|fix|chore|docs|test|refactor)\([a-z][a-z0-9,_-]*\): .+$'
+          REGEX='^(feat|fix|mod|docs|chore|refactor|test|perf|style)\([a-z][a-z0-9,_-]*\): .+$'
 
           if [ -z "${TITLE:-}" ]; then
             echo "::warning::Title is empty"
@@ -49,7 +49,7 @@ jobs:
           <type>(<area>): <summary>
           \`\`\`
 
-          - **type**: \`feat\` · \`fix\` · \`chore\` · \`docs\` · \`test\` · \`refactor\`
+          - **type**: \`feat\` · \`fix\` · \`mod\` · \`docs\` · \`chore\` · \`refactor\` · \`test\` · \`perf\` · \`style\` (branch-strategy.md §3.2 commit message 컨벤션 정합 / ADR-0003)
           - **area**: 모듈/도메인 (06 Architecture §3 인벤토리 도출). 3개 이상이면 \`multi\` + 본문 \`## Touched Areas\` 표 강제
           - **summary**: 한글/영문 자유, 50자 권고, 동사로 시작 권고
 
