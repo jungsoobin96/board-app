@@ -2,11 +2,16 @@
   "name": "@app/e2e",
   "version": "0.0.0",
   "private": true,
-  "description": "Playwright E2E (모듈 placeholder, 이슈 #21에서 실 도입)",
+  "description": "Playwright E2E — 5 골든 패스 (Home·Editor·Article·Delete cascade·Tag filter)",
   "type": "module",
   "scripts": {
     "build": "tsc -b",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
-    "test:e2e": "echo 'e2e script placeholder — 이슈 #21에서 playwright 도입 예정'"
+    "test": "playwright test",
+    "test:install": "playwright install chromium",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.49.1"
   }
 }
