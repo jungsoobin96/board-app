@@ -11,18 +11,22 @@
 - **Sprint 3 진행**: 4/4 완료 (#10·#11·#12·#13 모두 머지) — **Sprint 3 100% COMPLETE**
 - **Sprint 4 진행**: 4/4 완료 (#14 PR #42, #15 PR #43, #16 PR #44, #17 PR #45 모두 머지) — **Sprint 4 100% COMPLETE 🎉**
 - **Sprint 5 진행**: 6/N (#47 partial + #51 FULL fix + #52 R-OPS-* + #18 TagList + #19 Snapshot + **#20 PR #62 perf integration 4 시나리오 p95 < 200ms**) / 등록 backlog: #48·#56·#21 (P1)
-- **Sprint 6 진행**: 2/N (#22 PR #65 README + **#23 PR #66 한국어 주석 ≥80% + 측정 스크립트**) / 등록 backlog: #24·#25 (P0/P1)
+- **Sprint 6 진행**: 3/N (#22 PR #65 README + #23 PR #66 한국어 주석 + **#24 PR #(TBD) 최종 골든패스 + 평가 7개**) / 등록 backlog: #25 (P1)
 - **Gates**: A=PASS, B=PASS, C=PASS (2026-05-25)
 - **Branch protection**: 미적용 (Sprint 1 follow-up 권고)
 - **`pr-body-checkboxes` status check workflow**: 미등록 (Sprint 1 follow-up 권고)
 - **`sync-issue-labels.yml` 자동 라벨 전이**: ✅ **FULL fix** (PR #53, merge_commit=39bcef1) — H6 가설(GitHub은 신규 personal account의 신규 repo에 대해 owner가 Actions 탭을 직접 방문할 때까지 dispatcher를 silent로 비활성화 = inactive enable) 자연 확정. 5일간 전역 0건 → PR #53 open 즉시 trigger 발생 + 머지 시 추가 trigger. ADR-0029 자동화 완전 회복 — 본 PR 머지 후 이슈 #51 `Closes #51` 자동 close + `status:in-review` 라벨 자동 제거 실측 완료. **issue-pr-title-lint.yml**도 동시 회복 (ADR-0021 정규식 강제). #47 PR #49 H4 fix는 보존(보안 강화 조치 유지)
-- **Currently in review**: **PR #66 — #23 한국어 주석 ≥80% + 측정 스크립트 (Sprint 6 둘째 PR)**
+- **Currently in review**: **PR #(TBD) — #24 최종 골든패스 + 평가 기준 7개 (Sprint 6 셋째 PR)**
 - **Sprint 4 Follow-up 이슈 후보** (#14·#15·#16·#17 발견, 미등록): (A) pre-existing TS 에러 3건 정정 (`client.ts:18 import.meta.env`, `routes.tsx:39·46 string|undefined`) / (B) dev/stg/prod profile script 신설 (`dev:stg`/`dev:prod` 부족) / (C) RISK-03 deps 문구 정정 (`[data, status]` 권고 vs `[data]` 실제) / (D) Toast portal·queue·stacking (Sprint 5+) / (E) ErrorBoundary Sentry 외부 송신 (별도 ADR)
 - **Sprint 3 Follow-up 이슈 후보** (#10·#11·#12·#13 발견, 미등록): (1) Pretendard self-host / (2) frontend smoke 3 profile / (3) matchRoute trailing slash / (4) frontend/src/index.ts placeholder / (5) Component primitives (Sprint 4) / (6) vite-env.d.ts / (7) request() headers spread / (8) MSW 2.x + vitest jsdom 통합 디버깅 / (9) Home 에러 재시도 버튼 / (10) Pagination ellipsis truncation / (11) formatDate 유틸 분리 (#13 MINOR-01) / (12) seed:dev idempotent 보장 (id 매번 증가)
 - **Sprint 2 Follow-up 이슈 후보** (미등록): (a) asyncHandler 유틸 분리 (3 controller 중복) / (b) tags integration 시드 Promise.all / (c) error-schema afterEach mock 단순화
 - **Sprint 1 Follow-up 이슈 후보** (미등록): (i) CI smoke job 신설 / (ii) pollReady fetch body 명시 cancel / (iii) engines `>=20.11.0` 정정 / (iv) GitHub Actions workflows 0 runs + sync-issue-labels.yml / (v) 13/02-catalog F-12 fan-in (Sprint 6)
 
 ## History (시간 역순)
+
+### 2026-05-28 (Sprint 6 — #24 PR #(TBD) 최종 골든패스 + 평가 기준 7개)
+
+- **PR #(TBD) open** — `test(docs): 최종 골든패스 + 평가 기준 7개 (#24)`. Sprint 6 **셋째 PR (3/N)**. **mode=add** (ADR-0032 규칙 4 자동 결정, 부정 시그널 0건 — type:test 라벨은 부정 시그널 매핑 외). UC-06 fresh checkout 실증 2회 (저자, 시도 #1 fresh dir 회사 망 SSL inspection 부분 실패 / 시도 #2 작업 트리 부팅 ✅ HTTP 200) + 외부 시도자 #3 머지 후 보강 예정 = **KPI #1 1차 측정 2/10 환경 의존**. RFP §10 평가 기준 7개 1:1 매핑 → **6/7 PASS + 1 N/A (Phase 2 F-13)** (`eval-matrix.md` §8). README §10 Phase 2 향후 확장 절 보강 — F-13 페이지네이션 #1 신규 추가 + 평가 기준 §6 #4 백로그 명시 + `eval-matrix.md` link 추가 (기존 6항목 #1~#6 → #2~#7 후순위 shift). 8 산출 docs(brief·contract·plan·eng-review·acceptance·risk·code-review·ai-qa-report) + 2 부속 docs(attempts·eval-matrix) 모두 schema validate-doc.sh PASS. 회귀: backend 64 + frontend 86(+1 skip) + e2e 5 + 한국어 주석 4 layer 100% + 3 profile boot PASS (dev 68/stg 162/prod 200ms). ui_changed=false (docs only). pre-existing #48 frontend 3 TS error는 baseline 재현 — 본 PR 무관 회귀 0. 후속 별 이슈 후보 4건: F-13 구현 / KPI #1 완화 ADR / README SSL inspection 트러블슈팅 / #48 (이미 OPEN). PR title `test(docs):` (ADR-0021 정합) + branch `feat/final-golden-path-eval-issue-24` (ADR-0044 정합). Sprint 6 P0 3건 완료 — 잔여는 #25 (P1, 잔여 버그 + Open Questions).
 
 ### 2026-05-28 (Sprint 6 — #23 PR #66 한국어 주석 ≥80% + 측정 스크립트)
 
